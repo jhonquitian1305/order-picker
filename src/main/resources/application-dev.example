@@ -1,0 +1,13 @@
+##Conexión a base de datos
+spring.datasource.driver-class-name=
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.show-sql =
+spring.jpa.hibernate.ddl-auto:
+spring.jpa.properties.hibernate.dialect=
+
+## Mensajes de error
+spring.jpa.defer-datasource-initialization=true
+server.error.include-stacktrace=never
+spring.devtools.restart.log-condition-evaluation-delta=false
