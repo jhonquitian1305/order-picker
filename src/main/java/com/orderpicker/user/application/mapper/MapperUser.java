@@ -15,4 +15,13 @@ public class MapperUser {
                 .password(userDTO.getPassword())
                 .build();
     }
+
+    public UserDTO mapUserDTO(User user){
+        return UserDTO.builder()
+                .id(user.getId())
+                .dni(user.getDni())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .build();
+    }
 }
