@@ -86,6 +86,15 @@ public class UserServiceImp implements UserService {
         return userFound.get();
     }
 
+    @Override
+    public User updateOne(Long id, UserDTO userDTO) {
+        User userFound = this.getById(id);
+
+        User userUpdated = this.mapperUser.updateUser(userFound, userDTO);
+
+        return this.userRepository.save(userUpdated);
+    }
+
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){

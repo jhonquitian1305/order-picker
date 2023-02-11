@@ -60,4 +60,12 @@ public class UserController {
     ResponseEntity<UserDTO> getByEmail(@PathVariable("email") String email){
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByEmail(email)), HttpStatus.OK);
     }
+
+    @PutMapping(ENDPOINT_USER_ID)
+    ResponseEntity<UserDTO> updateOne(@PathVariable("id") Long id, @Valid @RequestBody UserDTO userDTO, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.updateOne(id, userDTO)), HttpStatus.OK);
+    }
 }

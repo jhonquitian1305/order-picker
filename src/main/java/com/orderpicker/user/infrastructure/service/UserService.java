@@ -10,4 +10,5 @@ public interface UserService {
     UserResponse findAll(int numberPage, int pageSize, String sortBy, String sortDir);
     User getByDni(String dni);
     User getByEmail(String email);
+    User updateOne(Long id, UserDTO userDTO);
 }
