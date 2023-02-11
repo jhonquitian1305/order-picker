@@ -11,4 +11,5 @@ public interface UserService {
     User getByDni(String dni);
     User getByEmail(String email);
     User updateOne(Long id, UserDTO userDTO);
+    void deleteOne(Long id);
 }

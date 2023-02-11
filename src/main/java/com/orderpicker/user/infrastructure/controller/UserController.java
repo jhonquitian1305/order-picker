@@ -68,4 +68,10 @@ public class UserController {
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.updateOne(id, userDTO)), HttpStatus.OK);
     }
+
+    @DeleteMapping(ENDPOINT_USER_ID)
+    ResponseEntity<String> deleteOne(@PathVariable("id") Long id){
+        this.userService.deleteOne(id);
+        return new ResponseEntity<>("User deleted", HttpStatus.OK);
+    }
 }

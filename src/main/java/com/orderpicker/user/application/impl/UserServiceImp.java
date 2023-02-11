@@ -95,6 +95,12 @@ public class UserServiceImp implements UserService {
         return this.userRepository.save(userUpdated);
     }
 
+    @Override
+    public void deleteOne(Long id) {
+        this.getById(id);
+        this.userRepository.deleteById(id);
+    }
+
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){
