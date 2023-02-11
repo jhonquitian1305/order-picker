@@ -5,6 +5,7 @@ import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
 import com.orderpicker.user.infrastructure.dto.UserDTO;
+import com.orderpicker.user.infrastructure.service.EncryptService;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,13 @@ public class UserServiceImp implements UserService {
 
     private final @NonNull MapperUser mapperUser;
 
+    private final @NonNull EncryptService encryptService;
+
     @Override
     public User save(UserDTO userDTO) {
         this.findByDni(userDTO.getDni());
         this.findByEmail(userDTO.getEmail());
+        this.encryptPassword(userDTO);
 
         return this.userRepository.save(this.mapperUser.mapUser(userDTO));
     }
@@ -41,5 +45,10 @@ public class UserServiceImp implements UserService {
         if(userFound.isPresent()){
             throw new UserBadRequestException("The user with email %s already exist".formatted(email));
         }
+    }
+
+    protected void encryptPassword(UserDTO studentDTO){
+        String hashPass = encryptService.encryptPassword(studentDTO.getPassword());
+        studentDTO.setPassword(hashPass);
     }
 }
