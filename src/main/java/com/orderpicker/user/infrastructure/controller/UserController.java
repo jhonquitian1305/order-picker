@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.orderpicker.user.infrastructure.constants.UserEndpointsConstants.ENDPOINT_USERS;
-import static com.orderpicker.user.infrastructure.constants.UserEndpointsConstants.ENDPOINT_USER_ID;
+import static com.orderpicker.user.infrastructure.constants.UserEndpointsConstants.*;
 import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.*;
 
 @RestController
@@ -50,5 +49,10 @@ public class UserController {
             @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.userService.findAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_USER_DNI)
+    ResponseEntity<UserDTO> getByDni(@PathVariable("dni") String dni){
+        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByDni(dni)), HttpStatus.OK);
     }
 }

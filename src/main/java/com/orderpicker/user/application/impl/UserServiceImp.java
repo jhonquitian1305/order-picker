@@ -68,6 +68,15 @@ public class UserServiceImp implements UserService {
                 .build();
     }
 
+    @Override
+    public User getByDni(String dni) {
+        Optional<User> userFound = this.userRepository.findByDni(dni);
+        if(userFound.isEmpty()){
+            throw new UserNotFoundException("The user with dni %s doesn't exist".formatted(dni));
+        }
+        return userFound.get();
+    }
+
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){

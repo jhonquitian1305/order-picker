@@ -8,4 +8,5 @@ public interface UserService {
     User save(UserDTO userDTO);
     User getById(Long id);
     UserResponse findAll(int numberPage, int pageSize, String sortBy, String sortDir);
+    User getByDni(String dni);
 }
