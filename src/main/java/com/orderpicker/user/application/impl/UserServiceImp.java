@@ -23,4 +23,11 @@ public class UserServiceImp implements UserService {
             throw new UserNotFoundException("The user with dni %s already exist".formatted(dni));
         }
     }
+
+    protected void findByEmail(String email){
+        Optional<User> userFound = this.userRepository.findByEmail(email);
+        if(userFound.isPresent()){
+            throw new UserNotFoundException("The user with email %s already exist".formatted(email));
+        }
+    }
 }
