@@ -9,4 +9,5 @@ public interface UserService {
     User getById(Long id);
     UserResponse findAll(int numberPage, int pageSize, String sortBy, String sortDir);
     User getByDni(String dni);
+    User getByEmail(String email);
 }

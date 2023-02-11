@@ -77,6 +77,15 @@ public class UserServiceImp implements UserService {
         return userFound.get();
     }
 
+    @Override
+    public User getByEmail(String email) {
+        Optional<User> userFound = this.userRepository.findByEmail(email);
+        if(userFound.isEmpty()){
+            throw new UserNotFoundException("User with email %s doesn't exist".formatted(email));
+        }
+        return userFound.get();
+    }
+
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){

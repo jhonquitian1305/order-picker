@@ -55,4 +55,9 @@ public class UserController {
     ResponseEntity<UserDTO> getByDni(@PathVariable("dni") String dni){
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByDni(dni)), HttpStatus.OK);
     }
+
+    @GetMapping(ENDPOINT_USER_EMAIL)
+    ResponseEntity<UserDTO> getByEmail(@PathVariable("email") String email){
+        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByEmail(email)), HttpStatus.OK);
+    }
 }
