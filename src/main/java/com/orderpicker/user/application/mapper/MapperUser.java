@@ -24,4 +24,13 @@ public class MapperUser {
                 .email(user.getEmail())
                 .build();
     }
+
+    public User updateUser(User user, UserDTO userDTO){
+        user.setDni(userDTO.getDni());
+        user.setFullName(userDTO.getFullName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+
+        return user;
+    }
 }
