@@ -1,8 +1,10 @@
 package com.orderpicker.user.application.impl;
 
 import com.orderpicker.user.application.exception.UserNotFoundException;
+import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
+import com.orderpicker.user.infrastructure.dto.UserDTO;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,16 @@ import java.util.Optional;
 public class UserServiceImp implements UserService {
 
     private final @NonNull UserRepository userRepository;
+
+    private final @NonNull MapperUser mapperUser;
+
+    @Override
+    public User save(UserDTO userDTO) {
+        this.findByDni(userDTO.getDni());
+        this.findByEmail(userDTO.getEmail());
+
+        return this.userRepository.save(this.mapperUser.mapUser(userDTO));
+    }
 
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
