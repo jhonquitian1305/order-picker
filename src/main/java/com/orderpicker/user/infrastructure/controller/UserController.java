@@ -11,14 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 import static com.orderpicker.user.infrastructure.constants.UserEndpointsConstants.ENDPOINT_USERS;
+import static com.orderpicker.user.infrastructure.constants.UserEndpointsConstants.ENDPOINT_USER_ID;
 
 @RestController
 @RequestMapping(ENDPOINT_USERS)
@@ -35,5 +33,10 @@ public class UserController {
             throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.save(userDTO)), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_USER_ID)
+    ResponseEntity<UserDTO> getById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getById(id)), HttpStatus.OK);
     }
 }

@@ -1,6 +1,7 @@
 package com.orderpicker.user.application.impl;
 
 import com.orderpicker.user.application.exception.UserBadRequestException;
+import com.orderpicker.user.application.exception.UserNotFoundException;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
@@ -31,6 +32,15 @@ public class UserServiceImp implements UserService {
         this.encryptPassword(userDTO);
 
         return this.userRepository.save(this.mapperUser.mapUser(userDTO));
+    }
+
+    @Override
+    public User getById(Long id) {
+        Optional<User> userFound = this.userRepository.findById(id);
+        if(userFound.isEmpty()){
+            throw new UserNotFoundException("The user with id %s doesn't exist".formatted(id));
+        }
+        return userFound.get();
     }
 
     protected void findByDni(String dni){
