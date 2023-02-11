@@ -6,13 +6,19 @@ import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
 import com.orderpicker.user.infrastructure.dto.UserDTO;
+import com.orderpicker.user.infrastructure.response.UserResponse;
 import com.orderpicker.user.infrastructure.service.EncryptService;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +47,25 @@ public class UserServiceImp implements UserService {
             throw new UserNotFoundException("The user with id %s doesn't exist".formatted(id));
         }
         return userFound.get();
+    }
+
+    @Override
+    public UserResponse findAll(int numberPage, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
+
+        Page<User> usersFound =this.userRepository.findAll(pageable);
+
+        List<UserDTO> users = usersFound.getContent().stream().map(this.mapperUser::mapUserDTO).toList();
+
+        return UserResponse.builder()
+                .content(users)
+                .pageNumber(usersFound.getNumber())
+                .pageSize(usersFound.getSize())
+                .totalElements(usersFound.getTotalElements())
+                .totalPages(usersFound.getTotalPages())
+                .lastOne(usersFound.isLast())
+                .build();
     }
 
     protected void findByDni(String dni){
