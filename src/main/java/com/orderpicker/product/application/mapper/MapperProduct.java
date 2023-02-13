@@ -23,4 +23,12 @@ public class MapperProduct {
                 .price(product.getPrice())
                 .build();
     }
+
+    public Product updateProduct(Product product, ProductDTO productDTO){
+        product.setName(productDTO.getName());
+        product.setAmount(productDTO.getAmount());
+        product.setPrice(product.getPrice());
+
+        return product;
+    }
 }
