@@ -63,6 +63,15 @@ public class ProductServiceImp implements ProductService {
                 .build();
     }
 
+    @Override
+    public Product getByName(String name) {
+        Optional<Product> productFound = this.productRepository.findByName(name);
+        if(productFound.isEmpty()){
+            throw new ProductNotFoundException("Product with name %s doesn't exist".formatted(name));
+        }
+        return productFound.get();
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){

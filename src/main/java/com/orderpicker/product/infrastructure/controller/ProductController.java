@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.ENDPOINT_PRODUCTS;
-import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.ENDPOINT_PRODUCT_ID;
+import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.*;
 import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.*;
 import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.USER_DEFAULT_SORT_DIR;
 
@@ -51,5 +50,10 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.productService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_PRODUCT_NAME)
+    ResponseEntity<ProductDTO> getByName(@PathVariable("name") String name){
+        return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.getByName(name)), HttpStatus.OK);
     }
 }
