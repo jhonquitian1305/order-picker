@@ -28,6 +28,10 @@ public class Product {
     @Positive
     private int amount;
 
+    @Column(nullable = false)
+    @Positive
+    private double price;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;
