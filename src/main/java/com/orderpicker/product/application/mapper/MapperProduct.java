@@ -13,4 +13,12 @@ public class MapperProduct {
                 .amount(productDTO.getAmount())
                 .build();
     }
+
+    public ProductDTO mapProductDTO(Product product){
+        return ProductDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .amount(product.getAmount())
+                .build();
+    }
 }
