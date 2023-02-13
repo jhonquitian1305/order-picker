@@ -81,6 +81,15 @@ public class ProductServiceImp implements ProductService {
         return this.productRepository.save(productUpdated);
     }
 
+    @Override
+    public Product updatePrice(Long id, Double price) {
+        Product productFound = this.getById(id);
+
+        productFound.setPrice(price);
+
+        return this.productRepository.save(productFound);
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){

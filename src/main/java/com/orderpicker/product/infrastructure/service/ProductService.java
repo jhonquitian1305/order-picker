@@ -10,4 +10,5 @@ public interface ProductService {
     ProductResponse getAll(int numberPage, int pageSize, String sortBy, String sortDir);
     Product getByName(String name);
     Product updateOneById(Long id, ProductDTO productDTO);
+    Product updatePrice(Long id, Double price);
 }
