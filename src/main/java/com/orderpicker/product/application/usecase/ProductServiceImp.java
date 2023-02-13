@@ -30,7 +30,7 @@ public class ProductServiceImp implements ProductService {
 
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
-        if(productFound.isEmpty()){
+        if(productFound.isPresent()){
             throw new ProductBadRequestException("Product with name %s already exists".formatted(name));
         }
     }
