@@ -11,4 +11,5 @@ public interface ProductService {
     Product getByName(String name);
     Product updateOneById(Long id, ProductDTO productDTO);
     Product updatePrice(Long id, Double price);
+    Product registerProductEntry(String name, int amount);
 }

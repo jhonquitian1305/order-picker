@@ -69,4 +69,9 @@ public class ProductController {
     ResponseEntity<ProductDTO> updatePrice(@PathVariable("id") Long id, @RequestBody Double price){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updatePrice(id, price)), HttpStatus.OK);
     }
+
+    @PatchMapping(ENDPOINT_PRODUCT_AMOUNT)
+    ResponseEntity<ProductDTO> registerProductEntry(@PathVariable("name") String name, @RequestBody int amount){
+        return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.registerProductEntry(name, amount)), HttpStatus.OK);
+    }
 }

@@ -90,6 +90,15 @@ public class ProductServiceImp implements ProductService {
         return this.productRepository.save(productFound);
     }
 
+    @Override
+    public Product registerProductEntry(String name, int amount) {
+        Product productFound = this.getByName(name);
+
+        productFound.setAmount(productFound.getAmount() + amount);
+
+        return this.productRepository.save(productFound);
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
