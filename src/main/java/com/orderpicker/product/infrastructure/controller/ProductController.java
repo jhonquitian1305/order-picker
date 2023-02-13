@@ -3,6 +3,7 @@ package com.orderpicker.product.infrastructure.controller;
 import com.orderpicker.product.application.exception.ProductBadRequestException;
 import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
+import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -17,6 +18,8 @@ import java.util.Objects;
 
 import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.ENDPOINT_PRODUCTS;
 import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.ENDPOINT_PRODUCT_ID;
+import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.*;
+import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.USER_DEFAULT_SORT_DIR;
 
 @RestController
 @RequestMapping(ENDPOINT_PRODUCTS)
@@ -38,5 +41,15 @@ public class ProductController {
     @GetMapping(ENDPOINT_PRODUCT_ID)
     ResponseEntity<ProductDTO> getById(@PathVariable("id") Long id){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.getById(id)), HttpStatus.OK);
+    }
+
+    @GetMapping
+    ResponseEntity<ProductResponse> getAll(
+            @RequestParam(value = "pageNumber", defaultValue = USER_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = USER_DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = USER_DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
+    ){
+        return new ResponseEntity<>(this.productService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 }
