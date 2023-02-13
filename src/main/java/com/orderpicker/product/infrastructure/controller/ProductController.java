@@ -56,4 +56,12 @@ public class ProductController {
     ResponseEntity<ProductDTO> getByName(@PathVariable("name") String name){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.getByName(name)), HttpStatus.OK);
     }
+
+    @PutMapping(ENDPOINT_PRODUCT_ID)
+    ResponseEntity<ProductDTO> updateOneById(@PathVariable("id") Long id, @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            throw new ProductBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
+        return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updateOneById(id, productDTO)), HttpStatus.OK);
+    }
 }

@@ -72,6 +72,15 @@ public class ProductServiceImp implements ProductService {
         return productFound.get();
     }
 
+    @Override
+    public Product updateOneById(Long id, ProductDTO productDTO) {
+        Product productFound = this.getById(id);
+
+        Product productUpdated = this.mapperProduct.updateProduct(productFound, productDTO);
+
+        return this.productRepository.save(productUpdated);
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
