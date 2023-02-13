@@ -65,7 +65,7 @@ public class ProductController {
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updateOneById(id, productDTO)), HttpStatus.OK);
     }
 
-    @PutMapping(ENDPOINT_PRODUCT_PRICE)
+    @PatchMapping(ENDPOINT_PRODUCT_PRICE)
     ResponseEntity<ProductDTO> updatePrice(@PathVariable("id") Long id, @RequestBody Double price){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updatePrice(id, price)), HttpStatus.OK);
     }
