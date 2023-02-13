@@ -5,4 +5,5 @@ import com.orderpicker.product.infrastructure.dto.ProductDTO;
 
 public interface ProductService {
     Product saveOne(ProductDTO productDTO);
+    Product getById(Long id);
 }
