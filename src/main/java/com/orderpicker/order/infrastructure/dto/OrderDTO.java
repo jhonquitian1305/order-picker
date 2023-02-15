@@ -30,7 +30,7 @@ public class OrderDTO {
 
     @NotNull(message = "products field couldn't be null")
     @NotEmpty(message = "client field couldn't be empty")
-    private List<Product> products;
+    private List<String> products;
 
     private Timestamp createdAt;
 }
