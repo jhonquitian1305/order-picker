@@ -3,6 +3,8 @@ package com.orderpicker.order.domain.model;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,8 +29,9 @@ public class Order {
     @Size(max = 200)
     private String description;
 
-    @Column(name = "total_cost")
-    private double totalCost;
+    @Column(name = "total_price")
+    @Positive
+    private double totalPrice;
 
     @Column(name = "is_delivered")
     @Value(value = "false")
