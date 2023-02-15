@@ -100,12 +100,10 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public Product registerProductOut(Long id, int amount) {
-        Product productFound = this.getById(id);
+    public Product registerProductOut(Product product, int amount) {
+        product.setAmount(product.getAmount() - amount);
 
-        productFound.setAmount(productFound.getAmount() - amount);
-
-        return this.productRepository.save(productFound);
+        return this.productRepository.save(product);
     }
 
     @Override

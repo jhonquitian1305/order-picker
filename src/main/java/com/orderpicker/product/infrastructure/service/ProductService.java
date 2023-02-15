@@ -12,7 +12,7 @@ public interface ProductService {
     Product updateOneById(Long id, ProductDTO productDTO);
     Product updatePrice(Long id, Double price);
     Product registerProductEntry(String name, int amount);
-    Product registerProductOut(Long id, int amount);
+    Product registerProductOut(Product product, int amount);
     Double getTotalPriceProduct(Product product, int amount);
     void deleteOneById(Long id);
 }
