@@ -30,6 +30,10 @@ public class Order {
     @Value(value = "false")
     private boolean isDelivered;
 
+    @ManyToOne
+    @JoinColumn(name = "client_dni")
+    private User client;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;
