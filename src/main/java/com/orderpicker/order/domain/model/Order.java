@@ -1,5 +1,6 @@
 package com.orderpicker.order.domain.model;
 
+import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +35,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "client_dni")
     private User client;
+
+    @ManyToMany
+    @Column(nullable = false)
+    private List<Product> products;
 
     @CreationTimestamp
     @Column(name = "created_at")
