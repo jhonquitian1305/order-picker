@@ -3,6 +3,7 @@ package com.orderpicker.order.domain.model;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,6 +24,7 @@ public class Order {
     private Long id;
 
     @Column
+    @Size(max = 200)
     private String description;
 
     @Column(name = "total_cost")
