@@ -74,4 +74,10 @@ public class ProductController {
     ResponseEntity<ProductDTO> registerProductEntry(@PathVariable("name") String name, @RequestBody int amount){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.registerProductEntry(name, amount)), HttpStatus.OK);
     }
+
+    @DeleteMapping(ENDPOINT_PRODUCT_ID)
+    ResponseEntity<String> deleteOneById(@PathVariable("id") Long id){
+        this.productService.deleteOneById(id);
+        return new ResponseEntity<>("Product deleted", HttpStatus.OK);
+    }
 }

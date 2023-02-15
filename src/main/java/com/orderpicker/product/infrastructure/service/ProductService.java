@@ -13,4 +13,5 @@ public interface ProductService {
     Product updatePrice(Long id, Double price);
     Product registerProductEntry(String name, int amount);
     Product registerProductOut(Long id, int amount);
+    void deleteOneById(Long id);
 }

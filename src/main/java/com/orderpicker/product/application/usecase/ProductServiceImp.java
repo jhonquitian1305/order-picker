@@ -108,6 +108,13 @@ public class ProductServiceImp implements ProductService {
         return this.productRepository.save(productFound);
     }
 
+    @Override
+    public void deleteOneById(Long id) {
+        this.getById(id);
+
+        this.productRepository.deleteById(id);
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
