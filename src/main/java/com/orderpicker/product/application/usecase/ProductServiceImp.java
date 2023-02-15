@@ -109,6 +109,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public Double getTotalPriceProduct(Product product, int amount) {
+        return product.getPrice() * amount;
+    }
+
+    @Override
     public void deleteOneById(Long id) {
         this.getById(id);
 
