@@ -29,8 +29,8 @@ public class OrderDTO {
     private String client;
 
     @NotNull(message = "products field couldn't be null")
-    @NotEmpty(message = "client field couldn't be empty")
-    private List<String> products;
+    @NotEmpty(message = "products field couldn't be empty")
+    private List<Product> products;
 
     private Timestamp createdAt;
 }
