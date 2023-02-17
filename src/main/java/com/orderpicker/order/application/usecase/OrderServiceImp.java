@@ -7,6 +7,7 @@ import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.service.ProductService;
+import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
@@ -29,11 +30,15 @@ public class OrderServiceImp implements OrderService {
 
     private final @NonNull MapperOrder mapperOrder;
 
+    private final @NonNull MapperUser mapperUser;
+
     @Override
     public Order createOrder(OrderDTO orderDTO) {
-        User client = this.userService.getByDni(orderDTO.getClient());
+        User clientFound = this.userService.getByDni(orderDTO.getClient());
 
-        List<Product> productsFound = this. searchProducts(orderDTO.getProducts());
+        User client = this.mapperUser.showUserOrder(clientFound);
+
+        List<Product> productsFound = this.searchProducts(orderDTO.getProducts());
 
         this.registerChangeProduct(orderDTO, productsFound);
 
