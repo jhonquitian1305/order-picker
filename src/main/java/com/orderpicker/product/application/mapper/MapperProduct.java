@@ -31,4 +31,15 @@ public class MapperProduct {
 
         return product;
     }
+
+    public Product showProductOrder(Product productFound, Product productOrder){
+        return Product.builder()
+                .id(productFound.getId())
+                .name(productFound.getName())
+                .amount(productOrder.getAmount())
+                .price(productFound.getPrice() * productOrder.getAmount())
+                .createdAt(productFound.getCreatedAt())
+                .updateAt(productFound.getUpdateAt())
+                .build();
+    }
 }

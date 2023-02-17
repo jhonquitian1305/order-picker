@@ -5,6 +5,7 @@ import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.service.OrderService;
+import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import com.orderpicker.user.application.mapper.MapperUser;
@@ -32,6 +33,8 @@ public class OrderServiceImp implements OrderService {
 
     private final @NonNull MapperUser mapperUser;
 
+    private final @NonNull MapperProduct mapperProduct;
+
     @Override
     public Order createOrder(OrderDTO orderDTO) {
         User clientFound = this.userService.getByDni(orderDTO.getClient());
@@ -42,7 +45,9 @@ public class OrderServiceImp implements OrderService {
 
         this.registerChangeProduct(orderDTO, productsFound);
 
-        return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, client, productsFound));
+        List<Product> showProductOrder = this.mapProductOrder(orderDTO, productsFound);
+
+        return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, client, showProductOrder));
     }
 
     protected List<Product> searchProducts(List<Product> products){
@@ -60,5 +65,17 @@ public class OrderServiceImp implements OrderService {
                 }
             });
         }
+    }
+
+    protected List<Product> mapProductOrder(OrderDTO orderDTO, List<Product> productsFound){
+        List<Product> mapProduct = new ArrayList<>();
+        for(Product productFound:productsFound){
+            orderDTO.getProducts().stream().forEach(product -> {
+                if(product.getName().equals(productFound.getName())){
+                    mapProduct.add(this.mapperProduct.showProductOrder(productFound, product));
+                }
+            });
+        }
+        return mapProduct;
     }
 }
