@@ -14,10 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDTOResponse {
     private Long id;
-    private String description;
+    private List<String> orderDescription;
     private double totalPrice;
     private boolean isDelivered;
-    private User client;
-    private List<Product> products;
     private Timestamp createdAt;
 }
