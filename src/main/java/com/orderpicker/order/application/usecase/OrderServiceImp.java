@@ -5,10 +5,8 @@ import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.service.OrderService;
-import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.service.ProductService;
-import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
@@ -31,23 +29,15 @@ public class OrderServiceImp implements OrderService {
 
     private final @NonNull MapperOrder mapperOrder;
 
-    private final @NonNull MapperUser mapperUser;
-
-    private final @NonNull MapperProduct mapperProduct;
-
     @Override
-    public Order createOrder(OrderDTO orderDTO) {
-        User clientFound = this.userService.getByDni(orderDTO.getClient());
-
-        User client = this.mapperUser.showUserOrder(clientFound);
+    public Order createOrder(Long id, OrderDTO orderDTO) {
+        User clientFound = this.userService.getById(id);
 
         List<Product> productsFound = this.searchProducts(orderDTO.getProducts());
 
         this.registerChangeProduct(orderDTO, productsFound);
 
-        List<Product> showProductOrder = this.mapProductOrder(orderDTO, productsFound);
-
-        return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, client, showProductOrder));
+        return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, clientFound, productsFound));
     }
 
     protected List<Product> searchProducts(List<Product> products){
@@ -57,25 +47,16 @@ public class OrderServiceImp implements OrderService {
     }
 
     protected void registerChangeProduct(OrderDTO orderDTO, List<Product> productsFound){
+        List<String> productsDescription = new ArrayList<>();
         for(Product productFound:productsFound){
             orderDTO.getProducts().stream().forEach(product -> {
                 if(product.getName().equals(productFound.getName())){
                     this.productService.registerProductOut(productFound, product.getAmount());
                     orderDTO.setTotalPrice(orderDTO.getTotalPrice() + this.productService.getTotalPriceProduct(productFound, product.getAmount()));
+                    productsDescription.add(String.format("Product: %s, amount: %s, unit price: %s, total price product: %s", product.getName(), product.getAmount(), productFound.getPrice(), this.productService.getTotalPriceProduct(productFound, product.getAmount())));
                 }
+                orderDTO.setOrderDescription(productsDescription);
             });
         }
-    }
-
-    protected List<Product> mapProductOrder(OrderDTO orderDTO, List<Product> productsFound){
-        List<Product> mapProduct = new ArrayList<>();
-        for(Product productFound:productsFound){
-            orderDTO.getProducts().stream().forEach(product -> {
-                if(product.getName().equals(productFound.getName())){
-                    mapProduct.add(this.mapperProduct.showProductOrder(productFound, product));
-                }
-            });
-        }
-        return mapProduct;
     }
 }

@@ -4,5 +4,5 @@ import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 
 public interface OrderService {
-    Order createOrder(OrderDTO orderDTO);
+    Order createOrder(Long id, OrderDTO orderDTO);
 }
