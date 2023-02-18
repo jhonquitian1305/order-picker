@@ -4,6 +4,8 @@ import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
+import com.orderpicker.order.infrastructure.dto.OrderUser;
+import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.service.ProductService;
@@ -12,6 +14,10 @@ import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +44,25 @@ public class OrderServiceImp implements OrderService {
         this.registerChangeProduct(orderDTO, productsFound);
 
         return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, clientFound, productsFound));
+    }
+
+    @Override
+    public OrderUserResponse getAllByClient(Long idUser, int numberPage, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
+
+        User userFound = this.userService.getById(idUser);
+
+        Page<OrderUser> ordersFound = this.orderRepository.findByUser(userFound.getId(), pageable);
+
+        return OrderUserResponse.builder()
+                .content(ordersFound.getContent())
+                .pageNumber(ordersFound.getNumber())
+                .pageSize(ordersFound.getSize())
+                .totalElements(ordersFound.getTotalElements())
+                .totalPages(ordersFound.getTotalPages())
+                .lastOne(ordersFound.isLast())
+                .build();
     }
 
     protected List<Product> searchProducts(List<Product> products){
