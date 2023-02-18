@@ -17,16 +17,11 @@ import java.util.List;
 public class OrderDTO {
     private Long id;
 
-    @Size(max = 200)
-    private String description;
+    private List<String> orderDescription;
 
     private double totalPrice;
 
     private boolean isDelivered;
-
-    @NotNull(message = "client field couldn't be null")
-    @NotEmpty(message = "client field couldn't be empty")
-    private String client;
 
     @NotNull(message = "products field couldn't be null")
     @NotEmpty(message = "products field couldn't be empty")

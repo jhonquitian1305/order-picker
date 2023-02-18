@@ -26,8 +26,7 @@ public class Order {
     private Long id;
 
     @Column
-    @Size(max = 200)
-    private String description;
+    private List<String> orderDescription;
 
     @Column(name = "total_price")
     @Positive
