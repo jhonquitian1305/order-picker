@@ -3,6 +3,8 @@ package com.orderpicker.order.domain.model;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.Constraint;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -25,7 +27,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 10000)
+    @Size(max = 10000)
     private List<String> orderDescription;
 
     @Column(name = "total_price")

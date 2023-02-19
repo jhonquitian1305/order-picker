@@ -3,7 +3,6 @@ package com.orderpicker.order.infrastructure.dto;
 import com.orderpicker.product.domain.model.Product;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.sql.Timestamp;
