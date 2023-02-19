@@ -1,16 +1,21 @@
 package com.orderpicker.order.infrastructure.controller;
 
+import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.response.OrderDTOResponse;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.ENDPOINT_ORDERS;
 import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.ENDPOINT_ORDER_USER;
@@ -28,8 +33,12 @@ public class OrderController {
     @PostMapping(ENDPOINT_ORDER_USER)
     ResponseEntity<OrderDTOResponse> saveOne(
             @PathVariable("idUser") Long idUser,
-            @RequestBody OrderDTO orderDTO
+            @Valid @RequestBody OrderDTO orderDTO,
+            BindingResult bindingResult
     ){
+        if(bindingResult.hasErrors()){
+            throw new OrderBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+        }
         return new ResponseEntity<>(this.mapperOrder.mapOrderDTOResponse(this.orderService.createOrder(idUser, orderDTO)), HttpStatus.CREATED);
     }
 
