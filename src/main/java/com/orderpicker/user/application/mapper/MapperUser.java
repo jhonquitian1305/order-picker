@@ -33,4 +33,16 @@ public class MapperUser {
 
         return user;
     }
+
+    public User showUserOrder(User user){
+        return User.builder()
+                .id(user.getId())
+                .dni(user.getDni())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .password("")
+                .createdAt(user.getCreatedAt())
+                .updateAt(user.getUpdateAt())
+                .build();
+    }
 }

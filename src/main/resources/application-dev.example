@@ -1,6 +1,6 @@
 ##Conexión a base de datos
 spring.datasource.driver-class-name=
-spring.datasource.url=
+spring.datasource.url=urldatabase?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
 spring.datasource.username=
 spring.datasource.password=
 spring.jpa.show-sql =
