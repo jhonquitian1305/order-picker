@@ -96,15 +96,17 @@ public class OrderServiceImp implements OrderService {
 
     protected void registerChangeProduct(OrderDTO orderDTO, List<Product> productsFound){
         List<String> productsDescription = new ArrayList<>();
+        List<String> uniqueProduct = new ArrayList<>();
         for(Product productFound:productsFound){
             orderDTO.getProducts().stream().forEach(product -> {
-                if(product.getName().equals(productFound.getName())){
+                if(product.getName().equals(productFound.getName()) && !uniqueProduct.contains(product.getName())){
                     this.productService.registerProductOut(productFound, product.getAmount());
                     orderDTO.setTotalPrice(orderDTO.getTotalPrice() + this.productService.getTotalPriceProduct(productFound, product.getAmount()));
                     productsDescription.add(String.format("Product: %s, amount: %s, unit price: %s, total price product: %s", product.getName(), product.getAmount(), productFound.getPrice(), this.productService.getTotalPriceProduct(productFound, product.getAmount())));
+                    uniqueProduct.add(product.getName());
                 }
-                orderDTO.setOrderDescription(productsDescription);
             });
+            orderDTO.setOrderDescription(productsDescription);
         }
     }
 
