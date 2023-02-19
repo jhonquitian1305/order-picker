@@ -1,6 +1,7 @@
 package com.orderpicker.order.application.usecase;
 
 import com.orderpicker.order.application.exception.OrderBadRequestException;
+import com.orderpicker.order.application.exception.OrderNotFoundException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
@@ -94,6 +95,15 @@ public class OrderServiceImp implements OrderService {
                 .totalPages(ordersFound.getTotalPages())
                 .lastOne(ordersFound.isLast())
                 .build();
+    }
+
+    @Override
+    public Orders getOneById(Long id) {
+        Orders orderFound = this.orderRepository.getOneById(id);
+        if(orderFound == null){
+            throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
+        }
+        return orderFound;
     }
 
     protected List<Product> searchProducts(List<Product> products){

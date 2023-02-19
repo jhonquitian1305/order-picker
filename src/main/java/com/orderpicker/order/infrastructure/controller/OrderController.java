@@ -3,6 +3,7 @@ package com.orderpicker.order.infrastructure.controller;
 import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
+import com.orderpicker.order.infrastructure.dto.Orders;
 import com.orderpicker.order.infrastructure.response.OrderDTOResponse;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.response.OrdersResponse;
@@ -62,5 +63,10 @@ public class OrderController {
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.orderService.getAll(condition, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_ORDER_ID)
+    ResponseEntity<Orders> getOneById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(this.orderService.getOneById(id), HttpStatus.OK);
     }
 }
