@@ -5,7 +5,7 @@ import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
-import com.orderpicker.order.infrastructure.dto.OrderUser;
+import com.orderpicker.order.infrastructure.dto.OrderInformation;
 import com.orderpicker.order.infrastructure.dto.Orders;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.response.OrdersResponse;
@@ -58,7 +58,7 @@ public class OrderServiceImp implements OrderService {
 
         User userFound = this.userService.getById(idUser);
 
-        Page<OrderUser> ordersFound = this.orderRepository.findByUser(userFound.getId(), pageable);
+        Page<OrderInformation> ordersFound = this.orderRepository.findByUser(userFound.getId(), pageable);
 
         return OrderUserResponse.builder()
                 .content(ordersFound.getContent())

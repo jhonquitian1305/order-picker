@@ -1,7 +1,7 @@
 package com.orderpicker.order.domain.repository;
 
 import com.orderpicker.order.domain.model.Order;
-import com.orderpicker.order.infrastructure.dto.OrderUser;
+import com.orderpicker.order.infrastructure.dto.OrderInformation;
 import com.orderpicker.order.infrastructure.dto.Orders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
             inner join users u on o.client = u.id            
             where u.id = ?1""")
-    Page<OrderUser> findByUser(Long id, Pageable pageable);
+    Page<OrderInformation> findByUser(Long id, Pageable pageable);
 
     @Query("""
             SELECT o.id as id, u.fullName as user, u.email as userEmail, o.orderDescription as orderDescription, o.isDelivered as isDelivered,

@@ -1,6 +1,6 @@
 package com.orderpicker.order.infrastructure.dto;
 
-public interface Orders extends OrderUser {
+public interface Orders extends OrderInformation {
     String getUser();
     String getUserEmail();
 }
