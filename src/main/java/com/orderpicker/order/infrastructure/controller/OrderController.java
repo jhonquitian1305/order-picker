@@ -5,6 +5,7 @@ import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.response.OrderDTOResponse;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
+import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -51,5 +52,15 @@ public class OrderController {
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.orderService.getAllByClient(idUser, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping
+    ResponseEntity<OrdersResponse> getAll(
+            @RequestParam(value = "pageNumber", defaultValue = ORDER_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = ORDER_DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
+    ){
+        return new ResponseEntity<>(this.orderService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 }

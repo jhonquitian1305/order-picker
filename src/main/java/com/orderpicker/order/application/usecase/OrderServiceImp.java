@@ -6,10 +6,11 @@ import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.dto.OrderUser;
+import com.orderpicker.order.infrastructure.dto.Orders;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
+import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import com.orderpicker.product.domain.model.Product;
-import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.infrastructure.service.UserService;
@@ -60,6 +61,24 @@ public class OrderServiceImp implements OrderService {
         Page<OrderUser> ordersFound = this.orderRepository.findByUser(userFound.getId(), pageable);
 
         return OrderUserResponse.builder()
+                .content(ordersFound.getContent())
+                .pageNumber(ordersFound.getNumber())
+                .pageSize(ordersFound.getSize())
+                .totalElements(ordersFound.getTotalElements())
+                .totalPages(ordersFound.getTotalPages())
+                .lastOne(ordersFound.isLast())
+                .build();
+    }
+
+    @Override
+    public OrdersResponse getAll(int numberPage, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
+
+        Page<Orders> ordersFound = this.orderRepository.getAll(pageable);
+
+
+        return OrdersResponse.builder()
                 .content(ordersFound.getContent())
                 .pageNumber(ordersFound.getNumber())
                 .pageSize(ordersFound.getSize())
