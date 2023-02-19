@@ -13,4 +13,5 @@ public interface OrderService {
     OrdersResponse getAll(String condition, int numberPage, int pageSize, String sortBy, String sortDir);
     Orders getOneById(Long id);
     OrderInformation getOneByIdAndUser(Long idUser, Long id);
+    Order markAsDelivered(Order order);
 }

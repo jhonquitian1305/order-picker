@@ -119,6 +119,15 @@ public class OrderServiceImp implements OrderService {
         return orderUserFound;
     }
 
+    @Override
+    public Order markAsDelivered(Order order) {
+        if(order.isDelivered()){
+            throw new OrderBadRequestException(String.format("Order with id %s already delivered", order.getId()));
+        }
+        order.setDelivered(true);
+        return this.orderRepository.save(order);
+    }
+
     protected List<Product> searchProducts(List<Product> products){
         List<Product> productsFound = new ArrayList<>();
         for(Product product:products) productsFound.add(this.productService.getByName(product.getName()));
