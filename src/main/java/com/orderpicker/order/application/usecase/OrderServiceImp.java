@@ -1,5 +1,6 @@
 package com.orderpicker.order.application.usecase;
 
+import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
@@ -8,6 +9,7 @@ import com.orderpicker.order.infrastructure.dto.OrderUser;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import com.orderpicker.product.domain.model.Product;
+import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.infrastructure.service.UserService;
@@ -38,6 +40,8 @@ public class OrderServiceImp implements OrderService {
     @Override
     public Order createOrder(Long id, OrderDTO orderDTO) {
         User clientFound = this.userService.getById(id);
+
+        this.negativeAmountProduct(orderDTO.getProducts());
 
         List<Product> productsFound = this.searchProducts(orderDTO.getProducts());
 
@@ -82,6 +86,14 @@ public class OrderServiceImp implements OrderService {
                 }
                 orderDTO.setOrderDescription(productsDescription);
             });
+        }
+    }
+
+    protected void negativeAmountProduct(List<Product> productsDTO){
+        for(Product product: productsDTO){
+            if(product.getAmount() < 1){
+                throw new OrderBadRequestException(String.format("%s product to must be greater than 0", product.getName()));
+            }
         }
     }
 }
