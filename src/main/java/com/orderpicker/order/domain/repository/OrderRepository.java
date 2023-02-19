@@ -24,4 +24,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             INNER JOIN users u on o.client = u.id
             """)
     Page<Orders> getAll(Pageable pageable);
+
+    @Query("""
+            SELECT o.id as id, u.fullName as user, u.email as userEmail, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
+            o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
+            INNER JOIN users u on o.client = u.id
+            where isDelivered = ?1
+            """)
+    Page<Orders> getAllDelivered(boolean delivered, Pageable pageable);
 }
