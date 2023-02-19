@@ -57,13 +57,13 @@ public class OrderController {
 
     @GetMapping
     ResponseEntity<OrdersResponse> getAll(
-            @RequestParam(value = "condition", defaultValue = ORDER_DEFAULT_CONDITION, required = false) String condition,
+            @RequestParam(value = "delivered", defaultValue = ORDER_DEFAULT_DELIVERED, required = false) String delivered,
             @RequestParam(value = "pageNumber", defaultValue = ORDER_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = ORDER_DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
-        return new ResponseEntity<>(this.orderService.getAll(condition, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+        return new ResponseEntity<>(this.orderService.getAll(delivered, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_ORDER_ID)

@@ -10,7 +10,7 @@ import com.orderpicker.order.infrastructure.response.OrdersResponse;
 public interface OrderService {
     Order createOrder(Long id, OrderDTO orderDTO);
     OrderUserResponse getAllByClient(Long idUser, int numberPage, int pageSize, String sortBy, String sortDir);
-    OrdersResponse getAll(String condition, int numberPage, int pageSize, String sortBy, String sortDir);
+    OrdersResponse getAll(String delivered, int numberPage, int pageSize, String sortBy, String sortDir);
     Orders getOneById(Long id);
     OrderInformation getOneByIdAndUser(Long idUser, Long id);
     Order markAsDelivered(Order order);
