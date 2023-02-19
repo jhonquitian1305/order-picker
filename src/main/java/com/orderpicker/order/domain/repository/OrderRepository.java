@@ -40,4 +40,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             where o.id = ?1
             """)
     Orders getOneById(Long id);
+
+    @Query("""
+            SELECT o.id as id, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
+            o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
+            inner join users u on o.client = u.id            
+            where u.id = ?1 AND o.id = ?2
+            """)
+    OrderInformation getOneByIdAndUser(Long idUser, Long id);
 }
