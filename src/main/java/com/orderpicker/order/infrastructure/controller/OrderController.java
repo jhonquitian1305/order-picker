@@ -3,6 +3,7 @@ package com.orderpicker.order.infrastructure.controller;
 import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
+import com.orderpicker.order.infrastructure.dto.OrderInformation;
 import com.orderpicker.order.infrastructure.dto.Orders;
 import com.orderpicker.order.infrastructure.response.OrderDTOResponse;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
@@ -68,5 +69,13 @@ public class OrderController {
     @GetMapping(ENDPOINT_ORDER_ID)
     ResponseEntity<Orders> getOneById(@PathVariable("id") Long id){
         return new ResponseEntity<>(this.orderService.getOneById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_ORDER_USER_ID)
+    ResponseEntity<OrderInformation> getOneByIdAndUser(
+            @PathVariable("idUser") Long idUser,
+            @PathVariable("id") Long id
+    ){
+        return new ResponseEntity<>(this.orderService.getOneByIdAndUser(idUser, id), HttpStatus.OK);
     }
 }

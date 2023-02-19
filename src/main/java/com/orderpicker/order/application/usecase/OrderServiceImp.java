@@ -106,6 +106,19 @@ public class OrderServiceImp implements OrderService {
         return orderFound;
     }
 
+    @Override
+    public OrderInformation getOneByIdAndUser(Long idUser, Long id) {
+        this.userService.getById(idUser);
+        this.getOneById(id);
+
+        OrderInformation orderUserFound = this.orderRepository.getOneByIdAndUser(idUser, id);
+        if(orderUserFound == null){
+            throw new OrderNotFoundException(String.format("Order with id %s doesn't belong to user with id %s", id, idUser));
+        }
+
+        return orderUserFound;
+    }
+
     protected List<Product> searchProducts(List<Product> products){
         List<Product> productsFound = new ArrayList<>();
         for(Product product:products) productsFound.add(this.productService.getByName(product.getName()));
