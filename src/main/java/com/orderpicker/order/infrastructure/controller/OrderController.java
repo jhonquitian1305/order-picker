@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.ENDPOINT_ORDERS;
-import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.ENDPOINT_ORDER_USER;
+import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.*;
 import static com.orderpicker.order.infrastructure.constants.OrderPaginationRequest.*;
 
 @RestController
@@ -56,11 +55,12 @@ public class OrderController {
 
     @GetMapping
     ResponseEntity<OrdersResponse> getAll(
+            @RequestParam(value = "condition", defaultValue = ORDER_DEFAULT_CONDITION, required = false) String condition,
             @RequestParam(value = "pageNumber", defaultValue = ORDER_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = ORDER_DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
-        return new ResponseEntity<>(this.orderService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+        return new ResponseEntity<>(this.orderService.getAll(condition, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 }

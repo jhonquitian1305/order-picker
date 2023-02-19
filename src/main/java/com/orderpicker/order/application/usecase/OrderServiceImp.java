@@ -71,12 +71,20 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public OrdersResponse getAll(int numberPage, int pageSize, String sortBy, String sortDir) {
+    public OrdersResponse getAll(String condition, int numberPage, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
 
-        Page<Orders> ordersFound = this.orderRepository.getAll(pageable);
+        Page<Orders> ordersFound;
 
+        if(condition.length() == 0){
+            ordersFound = this.orderRepository.getAll(pageable);
+        }else if(condition.equalsIgnoreCase("true") || condition.equalsIgnoreCase("false")){
+            boolean delivered = Boolean.parseBoolean(condition);
+            ordersFound = this.orderRepository.getAllDelivered(delivered, pageable);
+        }else{
+            throw new OrderBadRequestException(String.format("Data url incorrect in %s must be true or false", condition));
+        }
 
         return OrdersResponse.builder()
                 .content(ordersFound.getContent())
