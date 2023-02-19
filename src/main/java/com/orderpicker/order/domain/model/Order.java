@@ -44,7 +44,7 @@ public class Order {
     private User client;
 
     @ManyToMany
-    @Column(nullable = false)
+    @Column(nullable = false, length = 25)
     private List<Product> products;
 
     @CreationTimestamp
