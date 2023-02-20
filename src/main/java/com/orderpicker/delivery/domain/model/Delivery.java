@@ -30,6 +30,7 @@ public class Delivery {
     private boolean isPayed;
 
     @Column(nullable = false)
+    @Positive
     private double off;
 
     @OneToOne
