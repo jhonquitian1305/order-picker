@@ -118,6 +118,20 @@ public class ProductServiceImp implements ProductService {
         this.productRepository.deleteById(id);
     }
 
+    @Override
+    public void verifyAmountInOneOrder(List<Product> products, List<Product> productsDTO) {
+        products.forEach(product -> {
+            if(product.getAmount() == 0){
+                throw new ProductBadRequestException(String.format("At the moment there is no %s", product.getName()));
+            }
+            productsDTO.forEach(productDTO -> {
+                if(product.getName().equals(productDTO.getName()) && productDTO.getAmount() > product.getAmount()){
+                    throw new ProductBadRequestException(String.format("Amount %s is greater than the amount there is that is %s", productDTO.getAmount(), product.getAmount()));
+                }
+            });
+        });
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){

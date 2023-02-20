@@ -4,6 +4,8 @@ import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 
+import java.util.List;
+
 public interface ProductService {
     Product saveOne(ProductDTO productDTO);
     Product getById(Long id);
@@ -15,4 +17,5 @@ public interface ProductService {
     Product registerProductOut(Product product, int amount);
     Double getTotalPriceProduct(Product product, int amount);
     void deleteOneById(Long id);
+    void verifyAmountInOneOrder(List<Product> products, List<Product> productsDTO);
 }
