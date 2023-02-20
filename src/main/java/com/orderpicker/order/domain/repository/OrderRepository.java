@@ -19,14 +19,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<OrderInformation> findByUser(Long id, Pageable pageable);
 
     @Query("""
-            SELECT o.id as id, u.fullName as user, u.email as userEmail, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
+            SELECT o.id as id, u.fullName as user, u.email as userEmail, u.address as userAddress, u.phone as userPhone, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
             o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
             INNER JOIN users u on o.client = u.id
             """)
     Page<Orders> getAll(Pageable pageable);
 
     @Query("""
-            SELECT o.id as id, u.fullName as user, u.email as userEmail, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
+            SELECT o.id as id, u.fullName as user, u.email as userEmail, u.address as userAddress, u.phone as userPhone, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
             o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
             INNER JOIN users u on o.client = u.id
             where isDelivered = ?1
@@ -34,7 +34,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Orders> getAllDelivered(boolean delivered, Pageable pageable);
 
     @Query("""
-            SELECT o.id as id, u.fullName as user, u.email as userEmail, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
+            SELECT o.id as id, u.fullName as user, u.email as userEmail, u.address as userAddress, u.phone as userPhone, o.orderDescription as orderDescription, o.isDelivered as isDelivered,
             o.totalPrice as totalPrice, o.createdAt as createdAt from orders o
             INNER JOIN users u on o.client = u.id
             where o.id = ?1

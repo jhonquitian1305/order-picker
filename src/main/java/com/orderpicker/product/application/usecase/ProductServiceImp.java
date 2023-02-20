@@ -30,6 +30,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product saveOne(ProductDTO productDTO) {
+        this.verifyAmountEntered(productDTO.getAmount());
+
         this.findByName(productDTO.getName());
 
         return this.productRepository.save(this.mapperProduct.mapProduct(productDTO));
@@ -83,6 +85,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product updatePrice(Long id, Double price) {
+        this.verifyAmountEntered(price.intValue());
+
         Product productFound = this.getById(id);
 
         productFound.setPrice(price);
@@ -92,6 +96,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product registerProductEntry(String name, int amount) {
+        this.verifyAmountEntered(amount);
+
         Product productFound = this.getByName(name);
 
         productFound.setAmount(productFound.getAmount() + amount);
@@ -118,10 +124,30 @@ public class ProductServiceImp implements ProductService {
         this.productRepository.deleteById(id);
     }
 
+    @Override
+    public void verifyAmountInOneOrder(List<Product> products, List<Product> productsDTO) {
+        products.forEach(product -> {
+            if(product.getAmount() == 0){
+                throw new ProductBadRequestException(String.format("At the moment there is no %s", product.getName()));
+            }
+            productsDTO.forEach(productDTO -> {
+                if(product.getName().equals(productDTO.getName()) && productDTO.getAmount() > product.getAmount()){
+                    throw new ProductBadRequestException(String.format("Amount %s is greater than the amount there is that is %s", productDTO.getAmount(), product.getAmount()));
+                }
+            });
+        });
+    }
+
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
             throw new ProductBadRequestException("Product with name %s already exists".formatted(name));
+        }
+    }
+
+    protected void verifyAmountEntered(int amount){
+        if(amount < 1){
+            throw new ProductBadRequestException(String.format("Value entered %s must be greater than 0", amount));
         }
     }
 }

@@ -137,6 +137,7 @@ public class OrderServiceImp implements OrderService {
     protected void registerChangeProduct(OrderDTO orderDTO, List<Product> productsFound){
         List<String> productsDescription = new ArrayList<>();
         List<String> uniqueProduct = new ArrayList<>();
+        this.productService.verifyAmountInOneOrder(productsFound, orderDTO.getProducts());
         for(Product productFound:productsFound){
             orderDTO.getProducts().stream().forEach(product -> {
                 if(product.getName().equals(productFound.getName()) && !uniqueProduct.contains(product.getName())){

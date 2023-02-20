@@ -2,6 +2,7 @@ package com.orderpicker.user.infrastructure.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -29,5 +30,15 @@ public class UserDTO {
     @NotNull(message = "The password field couldn't be null")
     @NotEmpty(message = "The password field couldn't be empty")
     private String password;
+
+    @NotNull(message = "Address field couldn't be null")
+    @NotEmpty(message = "Address field couldn't be empty")
+    @Size(min = 5, max = 100)
+    private String address;
+
+    @NotNull(message = "Phone field couldn't be null")
+    @NotEmpty(message = "Phone field couldn't be empty")
+    @Size(min = 7, max = 20)
+    private String phone;
 }
 

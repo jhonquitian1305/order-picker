@@ -2,6 +2,7 @@ package com.orderpicker.product.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,7 +26,7 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    @Positive
+    @PositiveOrZero
     private int amount;
 
     @Column(nullable = false)

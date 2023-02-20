@@ -13,6 +13,8 @@ public class MapperUser {
                 .fullName(userDTO.getFullName())
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
+                .address(userDTO.getAddress())
+                .phone(userDTO.getPhone())
                 .build();
     }
 
@@ -22,6 +24,8 @@ public class MapperUser {
                 .dni(user.getDni())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
+                .address(user.getAddress())
+                .phone(user.getPhone())
                 .build();
     }
 
@@ -30,6 +34,8 @@ public class MapperUser {
         user.setFullName(userDTO.getFullName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
+        user.setAddress(userDTO.getAddress());
+        user.setPhone(userDTO.getPhone());
 
         return user;
     }
