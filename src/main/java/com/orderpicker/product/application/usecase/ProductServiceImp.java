@@ -30,6 +30,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product saveOne(ProductDTO productDTO) {
+        this.verifyAmountEntered(productDTO.getAmount());
+
         this.findByName(productDTO.getName());
 
         return this.productRepository.save(this.mapperProduct.mapProduct(productDTO));
@@ -83,6 +85,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product updatePrice(Long id, Double price) {
+        this.verifyAmountEntered(price.intValue());
+
         Product productFound = this.getById(id);
 
         productFound.setPrice(price);
@@ -92,6 +96,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product registerProductEntry(String name, int amount) {
+        this.verifyAmountEntered(amount);
+
         Product productFound = this.getByName(name);
 
         productFound.setAmount(productFound.getAmount() + amount);
@@ -136,6 +142,12 @@ public class ProductServiceImp implements ProductService {
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
             throw new ProductBadRequestException("Product with name %s already exists".formatted(name));
+        }
+    }
+
+    protected void verifyAmountEntered(int amount){
+        if(amount < 1){
+            throw new ProductBadRequestException(String.format("Value entered %s must be greater than 0", amount));
         }
     }
 }
