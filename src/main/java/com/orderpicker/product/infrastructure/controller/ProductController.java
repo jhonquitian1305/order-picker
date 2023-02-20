@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.*;
-import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.*;
-import static com.orderpicker.user.infrastructure.constants.UserPaginationRequest.USER_DEFAULT_SORT_DIR;
+import static com.orderpicker.product.infrastructure.constants.ProductPaginationRequest.*;
 
 @RestController
 @RequestMapping(ENDPOINT_PRODUCTS)
@@ -44,10 +43,10 @@ public class ProductController {
 
     @GetMapping
     ResponseEntity<ProductResponse> getAll(
-            @RequestParam(value = "pageNumber", defaultValue = USER_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = USER_DEFAULT_PAGE_SIZE, required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = USER_DEFAULT_SORT_BY, required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
+            @RequestParam(value = "pageNumber", defaultValue = PRODUCT_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = PRODUCT_DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = PRODUCT_DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PRODUCT_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.productService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
