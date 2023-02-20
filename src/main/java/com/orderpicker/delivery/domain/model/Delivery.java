@@ -1,5 +1,6 @@
 package com.orderpicker.delivery.domain.model;
 
+import com.orderpicker.order.domain.model.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -30,4 +31,8 @@ public class Delivery {
 
     @Column(nullable = false)
     private double off;
+
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }
