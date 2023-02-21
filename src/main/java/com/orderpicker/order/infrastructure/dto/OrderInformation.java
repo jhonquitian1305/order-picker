@@ -6,7 +6,7 @@ import java.util.List;
 public interface OrderInformation {
     Long getId();
     List<String> getOrderDescription();
-    String getTotalPrice();
+    Double getTotalPrice();
     Timestamp getCreatedAt();
     boolean getIsDelivered();
 }
