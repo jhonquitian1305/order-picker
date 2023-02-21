@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @Builder
@@ -28,4 +30,6 @@ public class DeliveryDTO {
     @NotEmpty(message = "off field couldn't be empty")
     @Positive
     private double off;
+
+    private Timestamp createdAt;
 }

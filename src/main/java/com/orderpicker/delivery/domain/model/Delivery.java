@@ -4,7 +4,10 @@ import com.orderpicker.order.domain.model.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -36,4 +39,8 @@ public class Delivery {
     @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 }
