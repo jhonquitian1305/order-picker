@@ -2,6 +2,7 @@ package com.orderpicker.delivery.infrastructure.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -24,7 +25,7 @@ public class DeliveryDTO {
     private boolean isPayed;
 
     @NotNull(message = "off field couldn't be null")
-    @Positive
+    @PositiveOrZero
     private double off;
 
     private Timestamp createdAt;

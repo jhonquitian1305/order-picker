@@ -3,6 +3,7 @@ package com.orderpicker.delivery.domain.model;
 import com.orderpicker.order.domain.model.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,7 @@ public class Delivery {
     private boolean isPayed;
 
     @Column(nullable = false)
-    @Positive
+    @PositiveOrZero
     private double off;
 
     @OneToOne
