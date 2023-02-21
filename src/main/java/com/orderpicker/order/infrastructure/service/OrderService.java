@@ -14,4 +14,5 @@ public interface OrderService {
     Orders getOneById(Long id);
     OrderInformation getOneByIdAndUser(Long idUser, Long id);
     Order markAsDelivered(Order order);
+    Order getOneByIdInDelivery(Long id);
 }

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor =  @__(@Autowired))
@@ -126,6 +127,15 @@ public class OrderServiceImp implements OrderService {
         }
         order.setDelivered(true);
         return this.orderRepository.save(order);
+    }
+
+    @Override
+    public Order getOneByIdInDelivery(Long id) {
+        Optional<Order> orderFound = this.orderRepository.findById(id);
+        if(orderFound.isEmpty()){
+            throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
+        }
+        return orderFound.get();
     }
 
     protected List<Product> searchProducts(List<Product> products){
