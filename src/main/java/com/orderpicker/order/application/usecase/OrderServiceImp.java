@@ -1,5 +1,6 @@
 package com.orderpicker.order.application.usecase;
 
+import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.exception.OrderNotFoundException;
 import com.orderpicker.order.application.mapper.MapperOrder;
@@ -136,6 +137,12 @@ public class OrderServiceImp implements OrderService {
             throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
         }
         return orderFound.get();
+    }
+
+    @Override
+    public void setDelivery(Order order, Delivery delivery) {
+        order.setDelivery(delivery);
+        this.orderRepository.save(order);
     }
 
     protected List<Product> searchProducts(List<Product> products){

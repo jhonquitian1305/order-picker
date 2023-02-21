@@ -1,5 +1,6 @@
 package com.orderpicker.order.infrastructure.service;
 
+import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.dto.OrderInformation;
@@ -15,4 +16,5 @@ public interface OrderService {
     OrderInformation getOneByIdAndUser(Long idUser, Long id);
     Order markAsDelivered(Order order);
     Order getOneByIdInDelivery(Long id);
+    void setDelivery(Order order, Delivery delivery);
 }
