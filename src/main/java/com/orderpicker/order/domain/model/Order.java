@@ -1,12 +1,10 @@
 package com.orderpicker.order.domain.model;
 
+import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
-import jakarta.validation.Constraint;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,4 +52,8 @@ public class Order {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 }
