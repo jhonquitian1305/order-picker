@@ -16,4 +16,19 @@ public class MapperDelivery {
                 .order(order)
                 .build();
     }
+
+    public DeliveryDTOResponse mapDeliveryDTOResponse(Delivery delivery){
+        return DeliveryDTOResponse.builder()
+                .delivery(delivery.getDelivery())
+                .orderDescription(delivery.getOrder().getOrderDescription())
+                .totalCost(delivery.getTotalCost())
+                .isCompleted(delivery.isCompleted())
+                .isPayed(delivery.isPayed())
+                .off(delivery.getOff())
+                .userName(delivery.getOrder().getClient().getFullName())
+                .userEmail(delivery.getOrder().getClient().getEmail())
+                .userAddress(delivery.getOrder().getClient().getAddress())
+                .userPhone(delivery.getOrder().getClient().getPhone())
+                .build();
+    }
 }
