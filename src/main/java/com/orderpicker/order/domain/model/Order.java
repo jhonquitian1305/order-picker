@@ -4,7 +4,7 @@ import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,7 +30,7 @@ public class Order {
     private List<String> orderDescription;
 
     @Column(name = "total_price")
-    @Positive
+    @PositiveOrZero
     private double totalPrice;
 
     @Column(name = "is_delivered")
