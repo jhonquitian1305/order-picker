@@ -63,6 +63,11 @@ public class DeliveryServiceImp implements DeliveryService {
                 .build();
     }
 
+    @Override
+    public DeliveryInformation getOneById(Long id) {
+        return this.deliveryRepository.getOneById(id);
+    }
+
     protected void setTotalCost(DeliveryDTO deliveryDTO, Order order){
         deliveryDTO.setTotalCost(order.getTotalPrice() - (order.getTotalPrice() * (deliveryDTO.getOff()/100)));
     }

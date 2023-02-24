@@ -3,6 +3,7 @@ package com.orderpicker.delivery.infrastructure.controller;
 import com.orderpicker.delivery.application.exception.DeliveryBadRequestException;
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
+import com.orderpicker.delivery.infrastructure.dto.DeliveryInformation;
 import com.orderpicker.delivery.infrastructure.response.DeliveryDTOResponse;
 import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 import com.orderpicker.delivery.infrastructure.service.DeliveryService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.ENDPOINT_DELIVERIES;
+import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.ENDPOINT_DELIVERIES_ID;
 import static com.orderpicker.delivery.infrastructure.constants.DeliveryPaginationRequest.*;
 
 @RestController
@@ -45,5 +47,10 @@ public class DeliveryController {
             @RequestParam(value = "sortDir", defaultValue = DELIVERY_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.deliveryService.getAllDeliveries(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_DELIVERIES_ID)
+    ResponseEntity<DeliveryInformation> getOneById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(this.deliveryService.getOneById(id), HttpStatus.OK);
     }
 }
