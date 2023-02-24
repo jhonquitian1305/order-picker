@@ -5,12 +5,18 @@ import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.delivery.domain.repository.DeliveryRepository;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
+import com.orderpicker.delivery.infrastructure.dto.DeliveryInformation;
+import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 import com.orderpicker.delivery.infrastructure.service.DeliveryService;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +44,23 @@ public class DeliveryServiceImp implements DeliveryService {
         this.orderService.setDelivery(orderFound, delivery);
 
         return delivery;
+    }
+
+    @Override
+    public DeliveryResponse getAllDeliveries(int numberPage, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
+
+        Page<DeliveryInformation> deliveriesFound = this.deliveryRepository.getAll(pageable);
+
+        return DeliveryResponse.builder()
+                .content(deliveriesFound.getContent())
+                .pageNumber(deliveriesFound.getNumber())
+                .pageSize(deliveriesFound.getSize())
+                .totalElements(deliveriesFound.getTotalElements())
+                .totalPages(deliveriesFound.getTotalPages())
+                .lastOne(deliveriesFound.isLast())
+                .build();
     }
 
     protected void setTotalCost(DeliveryDTO deliveryDTO, Order order){

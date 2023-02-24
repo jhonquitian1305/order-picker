@@ -4,6 +4,7 @@ import com.orderpicker.delivery.application.exception.DeliveryBadRequestExceptio
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
 import com.orderpicker.delivery.infrastructure.response.DeliveryDTOResponse;
+import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 import com.orderpicker.delivery.infrastructure.service.DeliveryService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -12,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.ENDPOINT_DELIVERIES;
+import static com.orderpicker.delivery.infrastructure.constants.DeliveryPaginationRequest.*;
 
 @RestController
 @RequestMapping(ENDPOINT_DELIVERIES)
@@ -38,4 +37,13 @@ public class DeliveryController {
         return new ResponseEntity<>(this.mapperDelivery.mapDeliveryDTOResponse(this.deliveryService.createOne(deliveryDTO)), HttpStatus.CREATED);
     }
 
+    @GetMapping
+    ResponseEntity<DeliveryResponse> getAllDeliveries(
+            @RequestParam(value = "pageNumber", defaultValue = DELIVERY_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = DELIVERY_DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = DELIVERY_DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = DELIVERY_DEFAULT_SORT_DIR, required = false) String sortDir
+    ){
+        return new ResponseEntity<>(this.deliveryService.getAllDeliveries(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
 }
