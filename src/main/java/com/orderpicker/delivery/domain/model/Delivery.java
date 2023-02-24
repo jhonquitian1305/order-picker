@@ -2,7 +2,6 @@ package com.orderpicker.delivery.domain.model;
 
 import com.orderpicker.order.domain.model.Order;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,7 +21,7 @@ public class Delivery {
     private Long delivery;
 
     @Column(name = "total_cost", nullable = false)
-    @Positive
+    @PositiveOrZero
     private double totalCost;
 
     @Column(name = "is_completed")
