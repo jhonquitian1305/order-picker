@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.ENDPOINT_DELIVERIES;
-import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.ENDPOINT_DELIVERIES_ID;
+import static com.orderpicker.delivery.infrastructure.constants.DeliveryEndpointsConstants.*;
 import static com.orderpicker.delivery.infrastructure.constants.DeliveryPaginationRequest.*;
 
 @RestController
@@ -54,5 +53,13 @@ public class DeliveryController {
     @GetMapping(ENDPOINT_DELIVERIES_ID)
     ResponseEntity<DeliveryInformation> getOneById(@PathVariable("id") Long id){
         return new ResponseEntity<>(this.deliveryService.getOneById(id), HttpStatus.OK);
+    }
+
+    @PatchMapping(ENDPOINT_DELIVERIES_DELIVERED)
+    ResponseEntity<String> orderDelivered(
+            @PathVariable("id") Long id
+    ){
+        this.deliveryService.orderDelivered(id);
+        return new ResponseEntity<>("Delivery has been delivered", HttpStatus.OK);
     }
 }

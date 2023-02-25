@@ -9,4 +9,5 @@ public interface DeliveryService {
     Delivery createOne(DeliveryDTO deliveryDTO);
     DeliveryResponse getAllDeliveries(String modelCondition, String idCondition, int numberPage, int pageSize, String sortBy, String sortDir);
     DeliveryInformation getOneById(Long id);
+    void orderDelivered(Long id);
 }

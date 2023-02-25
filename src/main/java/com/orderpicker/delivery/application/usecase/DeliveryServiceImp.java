@@ -1,6 +1,7 @@
 package com.orderpicker.delivery.application.usecase;
 
 import com.orderpicker.delivery.application.exception.DeliveryBadRequestException;
+import com.orderpicker.delivery.application.exception.DeliveryNotFoundException;
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.application.strategydeliveries.DeliveriesContext;
 import com.orderpicker.delivery.application.strategydeliveries.DeliveriesStrategy;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -72,6 +75,22 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public DeliveryInformation getOneById(Long id) {
         return this.deliveryRepository.getOneById(id);
+    }
+
+    @Override
+    public void orderDelivered(Long id) {
+        Optional<Delivery> deliveryFound =  this.deliveryRepository.findById(id);
+        if(deliveryFound.isEmpty()){
+            throw new DeliveryNotFoundException(String.format("Delivery with id %s doesn't exist", id));
+        }
+        Order orderFound = deliveryFound.get().getOrder();
+        if(deliveryFound.get().isCompleted()){
+            throw new DeliveryBadRequestException(String.format("Delivery with id %s already is delivered", id));
+        }
+        this.orderService.markAsDelivered(orderFound);
+        deliveryFound.get().setCompleted(true);
+        deliveryFound.get().setPayed(true);
+        this.deliveryRepository.save(deliveryFound.get());
     }
 
     protected void setTotalCost(DeliveryDTO deliveryDTO, Order order){
