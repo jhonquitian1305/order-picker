@@ -7,6 +7,6 @@ import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 
 public interface DeliveryService {
     Delivery createOne(DeliveryDTO deliveryDTO);
-    DeliveryResponse getAllDeliveries(int numberPage, int pageSize, String sortBy, String sortDir);
+    DeliveryResponse getAllDeliveries(String modelCondition, String idCondition, int numberPage, int pageSize, String sortBy, String sortDir);
     DeliveryInformation getOneById(Long id);
 }

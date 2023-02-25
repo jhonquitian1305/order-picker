@@ -41,12 +41,14 @@ public class DeliveryController {
 
     @GetMapping
     ResponseEntity<DeliveryResponse> getAllDeliveries(
+            @RequestParam(value = "model", defaultValue = DELIVERY_DEFAULT_MODEL, required = false) String model,
+            @RequestParam(value = "id", defaultValue = DELIVERY_DEFAULT_ID, required = false) String id,
             @RequestParam(value = "pageNumber", defaultValue = DELIVERY_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = DELIVERY_DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = DELIVERY_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = DELIVERY_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
-        return new ResponseEntity<>(this.deliveryService.getAllDeliveries(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+        return new ResponseEntity<>(this.deliveryService.getAllDeliveries(model, id, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_DELIVERIES_ID)

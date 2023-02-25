@@ -2,6 +2,8 @@ package com.orderpicker.delivery.application.usecase;
 
 import com.orderpicker.delivery.application.exception.DeliveryBadRequestException;
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
+import com.orderpicker.delivery.application.strategydeliveries.DeliveriesContext;
+import com.orderpicker.delivery.application.strategydeliveries.DeliveriesStrategy;
 import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.delivery.domain.repository.DeliveryRepository;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
@@ -29,6 +31,8 @@ public class DeliveryServiceImp implements DeliveryService {
 
     private final @NonNull MapperDelivery mapperDelivery;
 
+    private final @NonNull DeliveriesContext deliveriesContext;
+
     @Override
     public Delivery createOne(DeliveryDTO deliveryDTO) {
         Order orderFound = this.orderService.getOneByIdInDelivery(deliveryDTO.getOrder());
@@ -47,11 +51,13 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
-    public DeliveryResponse getAllDeliveries(int numberPage, int pageSize, String sortBy, String sortDir) {
+    public DeliveryResponse getAllDeliveries(String modelCondition, String idCondition, int numberPage, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
 
-        Page<DeliveryInformation> deliveriesFound = this.deliveryRepository.getAll(pageable);
+        DeliveriesStrategy deliveriesStrategy = this.deliveriesContext.loadDeliveriesStrategy(modelCondition);
+
+        Page<DeliveryInformation> deliveriesFound = deliveriesStrategy.findDeliveries(pageable, idCondition);
 
         return DeliveryResponse.builder()
                 .content(deliveriesFound.getContent())
