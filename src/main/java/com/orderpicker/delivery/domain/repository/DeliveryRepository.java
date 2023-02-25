@@ -30,4 +30,15 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
             WHERE d.id = ?1
             """)
     DeliveryInformation getOneById(Long id);
+
+    @Query("""
+            SELECT d.delivery AS delivery, o.orderDescription AS orderDescription, d.totalCost AS totalCost,
+            d.isCompleted AS isCompleted, d.isPayed AS isPayed, d.off AS off, u.fullName AS userName, u.email AS userEmail,
+            u.address AS userAddress, u.phone AS userPhone
+            FROM deliveries AS d
+            INNER JOIN orders AS o ON o.id = d.order
+            INNER JOIN users AS u ON u.id = o.client
+            WHERE u.dni = ?1
+            """)
+    Page<DeliveryInformation> getAllByUser(Pageable pageable, String idCondition);
 }
