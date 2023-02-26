@@ -1,5 +1,6 @@
 package com.orderpicker.order.application.usecase;
 
+import com.orderpicker.delivery.domain.model.Delivery;
 import com.orderpicker.order.application.exception.OrderBadRequestException;
 import com.orderpicker.order.application.exception.OrderNotFoundException;
 import com.orderpicker.order.application.mapper.MapperOrder;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor =  @__(@Autowired))
@@ -126,6 +128,21 @@ public class OrderServiceImp implements OrderService {
         }
         order.setDelivered(true);
         return this.orderRepository.save(order);
+    }
+
+    @Override
+    public Order getOneByIdInDelivery(Long id) {
+        Optional<Order> orderFound = this.orderRepository.findById(id);
+        if(orderFound.isEmpty()){
+            throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
+        }
+        return orderFound.get();
+    }
+
+    @Override
+    public void setDelivery(Order order, Delivery delivery) {
+        order.setDelivery(delivery);
+        this.orderRepository.save(order);
     }
 
     protected List<Product> searchProducts(List<Product> products){
