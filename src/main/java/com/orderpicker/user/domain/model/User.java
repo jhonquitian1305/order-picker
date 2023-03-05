@@ -2,6 +2,7 @@ package com.orderpicker.user.domain.model;
 
 import com.orderpicker.rol.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,6 +47,7 @@ public class User implements UserDetails {
     private String phone;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Role role;
 
     @CreationTimestamp
