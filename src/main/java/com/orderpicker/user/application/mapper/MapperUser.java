@@ -15,6 +15,7 @@ public class MapperUser {
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
                 .phone(userDTO.getPhone())
+                .role(userDTO.getRole())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public class MapperUser {
                 .email(user.getEmail())
                 .address(user.getAddress())
                 .phone(user.getPhone())
+                .role(user.getRole())
                 .build();
     }
 
