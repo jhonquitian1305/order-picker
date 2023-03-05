@@ -1,11 +1,12 @@
 package com.orderpicker.user.infrastructure.dto;
 
+import com.orderpicker.rol.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -40,5 +41,9 @@ public class UserDTO {
     @NotEmpty(message = "Phone field couldn't be empty")
     @Size(min = 7, max = 20)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "role field must be EMPLOYEE or USER")
+    private Role role;
 }
 
