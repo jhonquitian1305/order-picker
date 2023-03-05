@@ -1,5 +1,6 @@
 package com.orderpicker.user.domain.model;
 
+import com.orderpicker.rol.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -38,6 +39,9 @@ public class User {
     @Column(nullable = false)
     @Size(min = 7, max = 20)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @CreationTimestamp
     @Column(name = "created_at")
