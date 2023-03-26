@@ -74,8 +74,9 @@ public class UserController {
 
     @PutMapping(ENDPOINT_USER_ID)
     ResponseEntity<UserDTO> updateOne(@PathVariable("id") Long id, @Valid @RequestBody UserDTO userDTO, BindingResult bindingResult){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestById(id, userEmail);
         if(bindingResult.hasErrors()){
-            //TODO validar credenciales
             throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.updateOne(id, userDTO)), HttpStatus.OK);
