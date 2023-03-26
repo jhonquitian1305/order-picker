@@ -68,6 +68,8 @@ public class OrderController {
             @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateRole(userEmail);
         return new ResponseEntity<>(this.orderService.getAll(delivered, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
