@@ -91,6 +91,13 @@ public class UserServiceImp implements UserService {
     @Override
     public User updateOne(Long id, UserDTO userDTO) {
         User userFound = this.getById(id);
+
+        if(!userFound.getRole().equals(Role.ADMIN)){
+            if(!userDTO.getRole().equals(userFound.getRole())){
+                throw new UserNotFoundException("Role not found");
+            }
+        }
+
         this.encryptPassword(userDTO);
 
         User userUpdated = this.mapperUser.updateUser(userFound, userDTO);
