@@ -58,6 +58,8 @@ public class UserController {
 
     @GetMapping(ENDPOINT_USER_DNI)
     ResponseEntity<UserDTO> getByDni(@PathVariable("dni") String dni){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestByDni(dni, userEmail);
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByDni(dni)), HttpStatus.OK);
     }
 

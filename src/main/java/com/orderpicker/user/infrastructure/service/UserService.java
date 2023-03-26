@@ -13,4 +13,5 @@ public interface UserService {
     User updateOne(Long id, UserDTO userDTO);
     void deleteOne(Long id);
     void validateUserRequestById(Long id, String userEmail);
+    void validateUserRequestByDni(String dni, String userEmail);
 }

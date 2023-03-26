@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -108,6 +109,17 @@ public class UserServiceImp implements UserService {
         if(userFound.getRole() != Role.ADMIN){
             if(id != userFound.getId()){
                 throw new UserNotFoundException("User with id %s not found".formatted(id));
+            }
+        }
+    }
+
+    @Override
+    public void validateUserRequestByDni(String dni, String userEmail) {
+        User userFound = this.userRepository.findByEmail(userEmail).get();
+        if(userFound.getRole() != Role.ADMIN){
+            if(!dni.equals(userFound.getDni())){
+                System.out.println(!Objects.equals(dni, userFound.getDni()));
+                throw new UserNotFoundException("User with dni %s not found".formatted(dni));
             }
         }
     }
