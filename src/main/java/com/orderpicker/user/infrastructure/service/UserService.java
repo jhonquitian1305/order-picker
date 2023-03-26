@@ -15,4 +15,5 @@ public interface UserService {
     void validateUserRequestById(Long id, String userEmail);
     void validateUserRequestByDni(String dni, String userEmail);
     void validateUserRequestByEmail(String email, String userEmail);
+    void validateRole(String userEmail);
 }

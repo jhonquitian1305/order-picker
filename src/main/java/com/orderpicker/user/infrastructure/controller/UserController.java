@@ -53,6 +53,8 @@ public class UserController {
             @RequestParam(value = "sortBy", defaultValue = USER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateRole(userEmail);
         return new ResponseEntity<>(this.userService.findAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
@@ -73,6 +75,7 @@ public class UserController {
     @PutMapping(ENDPOINT_USER_ID)
     ResponseEntity<UserDTO> updateOne(@PathVariable("id") Long id, @Valid @RequestBody UserDTO userDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
+            //TODO validar credenciales
             throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.updateOne(id, userDTO)), HttpStatus.OK);
@@ -80,6 +83,7 @@ public class UserController {
 
     @DeleteMapping(ENDPOINT_USER_ID)
     ResponseEntity<String> deleteOne(@PathVariable("id") Long id){
+        //TODO validar credenciales
         this.userService.deleteOne(id);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);
     }
