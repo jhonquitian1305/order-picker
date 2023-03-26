@@ -1,5 +1,6 @@
 package com.orderpicker.user.application.impl;
 
+import com.orderpicker.rol.Role;
 import com.orderpicker.user.application.exception.UserBadRequestException;
 import com.orderpicker.user.application.exception.UserNotFoundException;
 import com.orderpicker.user.application.mapper.MapperUser;
@@ -99,6 +100,16 @@ public class UserServiceImp implements UserService {
     public void deleteOne(Long id) {
         this.getById(id);
         this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public void validateUserRequestById(Long id, String userEmail) {
+        User userFound = this.userRepository.findByEmail(userEmail).get();
+        if(userFound.getRole() != Role.ADMIN){
+            if(id != userFound.getId()){
+                throw new UserNotFoundException("User with id %s not found".formatted(id));
+            }
+        }
     }
 
     protected void findByDni(String dni){

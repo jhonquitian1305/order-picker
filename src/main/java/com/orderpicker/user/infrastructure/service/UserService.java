@@ -12,4 +12,5 @@ public interface UserService {
     User getByEmail(String email);
     User updateOne(Long id, UserDTO userDTO);
     void deleteOne(Long id);
+    void validateUserRequestById(Long id, String userEmail);
 }
