@@ -85,6 +85,8 @@ public class OrderController {
             @PathVariable("idUser") Long idUser,
             @PathVariable("id") Long id
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateUserRequestById(idUser, userEmail);
         return new ResponseEntity<>(this.orderService.getOneByIdAndUser(idUser, id), HttpStatus.OK);
     }
 }
