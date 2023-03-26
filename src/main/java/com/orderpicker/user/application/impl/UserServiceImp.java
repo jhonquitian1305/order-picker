@@ -91,6 +91,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User updateOne(Long id, UserDTO userDTO) {
         User userFound = this.getById(id);
+        this.encryptPassword(userDTO);
 
         User userUpdated = this.mapperUser.updateUser(userFound, userDTO);
 
