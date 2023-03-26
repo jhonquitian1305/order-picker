@@ -116,9 +116,8 @@ public class UserServiceImp implements UserService {
     @Override
     public void validateUserRequestByDni(String dni, String userEmail) {
         User userFound = this.userRepository.findByEmail(userEmail).get();
-        if(userFound.getRole() != Role.ADMIN){
+        if(!userFound.getRole().equals(Role.ADMIN)){
             if(!dni.equals(userFound.getDni())){
-                System.out.println(!Objects.equals(dni, userFound.getDni()));
                 throw new UserNotFoundException("User with dni %s not found".formatted(dni));
             }
         }
@@ -127,9 +126,8 @@ public class UserServiceImp implements UserService {
     @Override
     public void validateUserRequestByEmail(String email, String userEmail) {
         User userFound = this.userRepository.findByEmail(userEmail).get();
-        if(userFound.getRole() != Role.ADMIN){
+        if(!userFound.getRole().equals(Role.ADMIN)){
             if(!email.equals(userFound.getEmail())){
-                System.out.println(!Objects.equals(email, userFound.getDni()));
                 throw new UserNotFoundException("User with email %s not found".formatted(email));
             }
         }
