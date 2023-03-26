@@ -84,7 +84,8 @@ public class UserController {
 
     @DeleteMapping(ENDPOINT_USER_ID)
     ResponseEntity<String> deleteOne(@PathVariable("id") Long id){
-        //TODO validar credenciales
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestById(id, userEmail);
         this.userService.deleteOne(id);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);
     }
