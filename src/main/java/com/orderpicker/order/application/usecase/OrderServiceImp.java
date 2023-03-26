@@ -145,6 +145,11 @@ public class OrderServiceImp implements OrderService {
         this.orderRepository.save(order);
     }
 
+    @Override
+    public void validateUserRequestById(Long idUser, String userEmail) {
+        this.userService.validateUserRequestById(idUser, userEmail);
+    }
+
     protected List<Product> searchProducts(List<Product> products){
         List<Product> productsFound = new ArrayList<>();
         for(Product product:products) productsFound.add(this.productService.getByName(product.getName()));

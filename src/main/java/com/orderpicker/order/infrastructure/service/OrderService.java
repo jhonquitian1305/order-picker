@@ -17,4 +17,5 @@ public interface OrderService {
     Order markAsDelivered(Order order);
     Order getOneByIdInDelivery(Long id);
     void setDelivery(Order order, Delivery delivery);
+    void validateUserRequestById(Long idUser, String userEmail);
 }

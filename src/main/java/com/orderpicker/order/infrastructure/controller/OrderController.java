@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,8 @@ public class OrderController {
             @Valid @RequestBody OrderDTO orderDTO,
             BindingResult bindingResult
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateUserRequestById(idUser, userEmail);
         if(bindingResult.hasErrors()){
             throw new OrderBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
