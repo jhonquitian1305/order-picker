@@ -75,6 +75,8 @@ public class OrderController {
 
     @GetMapping(ENDPOINT_ORDER_ID)
     ResponseEntity<Orders> getOneById(@PathVariable("id") Long id){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateRole(userEmail);
         return new ResponseEntity<>(this.orderService.getOneById(id), HttpStatus.OK);
     }
 
