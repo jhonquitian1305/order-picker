@@ -107,7 +107,7 @@ public class UserServiceImp implements UserService {
     public void validateUserRequestById(Long id, String userEmail) {
         User userFound = this.userRepository.findByEmail(userEmail).get();
         if(userFound.getRole() != Role.ADMIN){
-            if(id != userFound.getId()){
+            if(!id.equals(userFound.getId())){
                 throw new UserNotFoundException("User with id %s not found".formatted(id));
             }
         }
