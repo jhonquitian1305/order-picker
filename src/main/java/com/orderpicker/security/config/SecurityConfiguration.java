@@ -25,6 +25,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/order-picker/auth/login")
                 .permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/order-picker/users/**")
+                .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/order-picker/products/**")
                 .authenticated()
                 .requestMatchers("/api/order-picker/products/**")
