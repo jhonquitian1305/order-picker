@@ -23,6 +23,8 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/api/order-picker/auth/login")
+                .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/order-picker/products/**")
                 .authenticated()
                 .requestMatchers("/api/order-picker/products/**")
