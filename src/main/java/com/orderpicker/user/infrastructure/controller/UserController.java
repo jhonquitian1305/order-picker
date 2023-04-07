@@ -34,7 +34,7 @@ public class UserController {
         if(bindingResult.hasErrors()){
             throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.save(userDTO)), HttpStatus.OK);
+        return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.save(userDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping(ENDPOINT_USER_ID)
