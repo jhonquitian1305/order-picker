@@ -1,5 +1,6 @@
 package com.orderpicker.user.application.impl;
 
+import com.orderpicker.rol.Role;
 import com.orderpicker.user.application.exception.UserBadRequestException;
 import com.orderpicker.user.application.exception.UserNotFoundException;
 import com.orderpicker.user.application.mapper.MapperUser;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,6 +35,9 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User save(UserDTO userDTO) {
+        if(userDTO.getRole().equals(Role.ADMIN)){
+            throw new UserBadRequestException("Cannot be %s. Allowed roles are %s and %s".formatted(Role.ADMIN, Role.EMPLOYEE, Role.USER));
+        }
         this.findByDni(userDTO.getDni());
         this.findByEmail(userDTO.getEmail());
         this.encryptPassword(userDTO);
@@ -90,6 +95,14 @@ public class UserServiceImp implements UserService {
     public User updateOne(Long id, UserDTO userDTO) {
         User userFound = this.getById(id);
 
+        if(!userFound.getRole().equals(Role.ADMIN)){
+            if(!userDTO.getRole().equals(userFound.getRole())){
+                throw new UserNotFoundException("Role not found");
+            }
+        }
+
+        this.encryptPassword(userDTO);
+
         User userUpdated = this.mapperUser.updateUser(userFound, userDTO);
 
         return this.userRepository.save(userUpdated);
@@ -99,6 +112,44 @@ public class UserServiceImp implements UserService {
     public void deleteOne(Long id) {
         this.getById(id);
         this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public void validateUserRequestById(Long id, String userEmail) {
+        User userFound = this.getByEmail(userEmail);
+        if(userFound.getRole() != Role.ADMIN){
+            if(!id.equals(userFound.getId())){
+                throw new UserNotFoundException("User with id %s not found".formatted(id));
+            }
+        }
+    }
+
+    @Override
+    public void validateUserRequestByDni(String dni, String userEmail) {
+        User userFound = this.getByEmail(userEmail);
+        if(!userFound.getRole().equals(Role.ADMIN)){
+            if(!dni.equals(userFound.getDni())){
+                throw new UserNotFoundException("User with dni %s not found".formatted(dni));
+            }
+        }
+    }
+
+    @Override
+    public void validateUserRequestByEmail(String email, String userEmail) {
+        User userFound = this.getByEmail(userEmail);
+        if(!userFound.getRole().equals(Role.ADMIN)){
+            if(!email.equals(userFound.getEmail())){
+                throw new UserNotFoundException("User with email %s not found".formatted(email));
+            }
+        }
+    }
+
+    @Override
+    public void validateRole(String userEmail) {
+        User userFound = this.userRepository.findByEmail(userEmail).get();
+        if(!userFound.getRole().equals(Role.ADMIN)){
+            throw new UserNotFoundException("Request not found");
+        }
     }
 
     protected void findByDni(String dni){

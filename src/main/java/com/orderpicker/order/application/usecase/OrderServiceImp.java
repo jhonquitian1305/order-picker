@@ -14,6 +14,7 @@ import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.service.ProductService;
+import com.orderpicker.rol.Role;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
@@ -143,6 +144,19 @@ public class OrderServiceImp implements OrderService {
     public void setDelivery(Order order, Delivery delivery) {
         order.setDelivery(delivery);
         this.orderRepository.save(order);
+    }
+
+    @Override
+    public void validateUserRequestById(Long idUser, String userEmail) {
+        this.userService.validateUserRequestById(idUser, userEmail);
+    }
+
+    @Override
+    public void validateRole(String userEmail) {
+        User userFound = this.userService.getByEmail(userEmail);
+        if(!userFound.getRole().equals(Role.EMPLOYEE) && !userFound.getRole().equals(Role.ADMIN)){
+            throw new OrderNotFoundException("Request not found");
+        }
     }
 
     protected List<Product> searchProducts(List<Product> products){

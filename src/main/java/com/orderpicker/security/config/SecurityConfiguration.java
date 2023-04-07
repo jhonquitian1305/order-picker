@@ -3,6 +3,7 @@ package com.orderpicker.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,12 +23,14 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/api/order-picker/products/**")
+                .authenticated()
                 .requestMatchers("/api/order-picker/products/**")
                 .hasAnyAuthority("ADMIN", "EMPLOYEE")
                 .requestMatchers("/api/order-picker/deliveries/**")
                 .hasAnyAuthority("ADMIN", "EMPLOYEE")
                 .anyRequest()
-                .permitAll()
+                .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

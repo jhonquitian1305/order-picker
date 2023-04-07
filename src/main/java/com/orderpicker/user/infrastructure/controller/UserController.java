@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,11 @@ public class UserController {
     }
 
     @GetMapping(ENDPOINT_USER_ID)
-    ResponseEntity<UserDTO> getById(@PathVariable("id") Long id){
+    ResponseEntity<UserDTO> getById(
+        @PathVariable("id") Long id
+    ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestById(id, userEmail);
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getById(id)), HttpStatus.OK);
     }
 
@@ -48,21 +53,29 @@ public class UserController {
             @RequestParam(value = "sortBy", defaultValue = USER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = USER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateRole(userEmail);
         return new ResponseEntity<>(this.userService.findAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_USER_DNI)
     ResponseEntity<UserDTO> getByDni(@PathVariable("dni") String dni){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestByDni(dni, userEmail);
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByDni(dni)), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_USER_EMAIL)
     ResponseEntity<UserDTO> getByEmail(@PathVariable("email") String email){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestByEmail(email, userEmail);
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.getByEmail(email)), HttpStatus.OK);
     }
 
     @PutMapping(ENDPOINT_USER_ID)
     ResponseEntity<UserDTO> updateOne(@PathVariable("id") Long id, @Valid @RequestBody UserDTO userDTO, BindingResult bindingResult){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestById(id, userEmail);
         if(bindingResult.hasErrors()){
             throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -71,6 +84,8 @@ public class UserController {
 
     @DeleteMapping(ENDPOINT_USER_ID)
     ResponseEntity<String> deleteOne(@PathVariable("id") Long id){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.userService.validateUserRequestById(id, userEmail);
         this.userService.deleteOne(id);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);
     }

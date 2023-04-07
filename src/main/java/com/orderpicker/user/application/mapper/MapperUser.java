@@ -38,6 +38,7 @@ public class MapperUser {
         user.setPassword(userDTO.getPassword());
         user.setAddress(userDTO.getAddress());
         user.setPhone(userDTO.getPhone());
+        user.setRole(userDTO.getRole());
 
         return user;
     }

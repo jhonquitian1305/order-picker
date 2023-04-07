@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,8 @@ public class OrderController {
             @Valid @RequestBody OrderDTO orderDTO,
             BindingResult bindingResult
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateUserRequestById(idUser, userEmail);
         if(bindingResult.hasErrors()){
             throw new OrderBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
@@ -52,6 +55,8 @@ public class OrderController {
             @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateUserRequestById(idUser, userEmail);
         return new ResponseEntity<>(this.orderService.getAllByClient(idUser, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
@@ -63,11 +68,15 @@ public class OrderController {
             @RequestParam(value = "sortBy", defaultValue = ORDER_DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = ORDER_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateRole(userEmail);
         return new ResponseEntity<>(this.orderService.getAll(delivered, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_ORDER_ID)
     ResponseEntity<Orders> getOneById(@PathVariable("id") Long id){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateRole(userEmail);
         return new ResponseEntity<>(this.orderService.getOneById(id), HttpStatus.OK);
     }
 
@@ -76,6 +85,8 @@ public class OrderController {
             @PathVariable("idUser") Long idUser,
             @PathVariable("id") Long id
     ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateUserRequestById(idUser, userEmail);
         return new ResponseEntity<>(this.orderService.getOneByIdAndUser(idUser, id), HttpStatus.OK);
     }
 }
