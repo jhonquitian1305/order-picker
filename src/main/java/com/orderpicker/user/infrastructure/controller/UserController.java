@@ -242,7 +242,7 @@ public class UserController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDTO.class)
+                                    schema = @Schema(implementation = String.class)
                             )
                     }
             ),
