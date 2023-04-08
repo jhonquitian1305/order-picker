@@ -104,7 +104,7 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Get All Products",
+                    description = "All Products Obtained",
                     headers = {
                             @Header(name = "Authorization", description = "Token authorization")
                     },
