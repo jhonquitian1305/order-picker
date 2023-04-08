@@ -104,7 +104,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Get All Users",
+                    description = "All Users Obtained",
                     headers = {
                             @Header(name = "Authorization", description = "Token authorization")
                     },
