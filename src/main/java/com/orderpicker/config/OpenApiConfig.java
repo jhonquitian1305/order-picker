@@ -15,6 +15,12 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         final String apiTitle = String.format("%s API", "Order Picker");
+        final String apiDescription = """
+                    This api is made for to improve programming skills with the Java language, Spring Boot framework and MySQL Database, in addition
+                    the api has unit test with Junit and Mockito.
+                    To begin you must create a user with Role USER or EMPLOYEE and run the different endpoints where you can create products, orders and
+                    make deliveries according to the role that chose.\s
+                """;
         return new OpenAPI()
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
             .components(
@@ -27,6 +33,6 @@ public class OpenApiConfig {
                             .bearerFormat("JWT")
                     )
             )
-            .info(new Info().title(apiTitle).version("1.0"));
+            .info(new Info().title(apiTitle).version("1.0.0").description(apiDescription));
     }
 }
