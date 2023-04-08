@@ -7,6 +7,7 @@ import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,6 +40,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Product Created",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -67,6 +71,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -98,6 +105,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Get All Products",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -131,6 +141,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -162,6 +175,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -197,6 +213,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product's price Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -229,6 +248,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product's amount Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -261,6 +283,9 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Product Deleted",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
