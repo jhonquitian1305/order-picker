@@ -8,6 +8,7 @@ import com.orderpicker.user.infrastructure.response.UserResponse;
 import com.orderpicker.user.infrastructure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,6 +69,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                 mediaType = "application/json",
@@ -101,6 +105,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Get All Users",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                 mediaType = "application/json",
@@ -136,6 +143,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -169,6 +179,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -202,6 +215,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -239,6 +255,9 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Deleted",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
                     content = {
                             @Content(
                                     mediaType = "application/json",
