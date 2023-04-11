@@ -1,0 +1,1880 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Order Picker API",
+    "description": "    This api is made to improve programming skills with the Java language, Spring Boot framework and MySQL Database, in addition\n    the api has unit test with Junit and Mockito.\n    To begin you must create a user with Role USER or EMPLOYEE and run the different endpoints where you can create products, orders and\n    make deliveries according to the role that chose. \n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/order-picker/auth/login": {
+      "post": {
+        "tags": [
+          "authentication-controller"
+        ],
+        "summary": "Login",
+        "operationId": "authenticate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Login successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values entry"
+          }
+        }
+      }
+    },
+    "/api/order-picker/users": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Create a User",
+        "operationId": "save",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values entry"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get All Users",
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Choose a page number in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Choose a page size in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the answer by a field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "sortDir",
+            "in": "query",
+            "description": "Sort the answer by a direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Users Obtained",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          }
+        }
+      }
+    },
+    "/api/order-picker/users/{id}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get a User by id",
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID to search",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Update a User by id",
+        "operationId": "updateOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User Updated",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Delete a User by id",
+        "operationId": "deleteOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Deleted",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/products/{id}": {
+      "get": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Get a Product by id",
+        "operationId": "getById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Product ID to search",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Update a Product by id",
+        "operationId": "updateOneById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Product ID to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Product Updated",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Delete a Product by id",
+        "operationId": "deleteOneById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Product ID to be Deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Deleted",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/products": {
+      "get": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Get All Products",
+        "operationId": "getAll",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Choose a page number in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Choose a page size in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the answer by a field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "sortDir",
+            "in": "query",
+            "description": "Sort the answer by a direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Products Obtained",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Create a Product",
+        "operationId": "saveOne",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Product Created",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values entry"
+          }
+        }
+      }
+    },
+    "/api/order-picker/orders/user/{idUser}": {
+      "get": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Get All Orders by a client",
+        "operationId": "getAllByClient",
+        "parameters": [
+          {
+            "name": "idUser",
+            "in": "path",
+            "description": "User ID to get your orders",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Choose a page number in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Choose a page size in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the answer by a field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "isDelivered"
+            }
+          },
+          {
+            "name": "sortDir",
+            "in": "query",
+            "description": "Sort the answer by a direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All orders obtained of a client",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderUserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Create an Order",
+        "operationId": "saveOne_1",
+        "parameters": [
+          {
+            "name": "idUser",
+            "in": "path",
+            "description": "User ID that do the order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Order Created",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDTOResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values entry"
+          }
+        }
+      }
+    },
+    "/api/order-picker/deliveries": {
+      "get": {
+        "tags": [
+          "delivery-controller"
+        ],
+        "summary": "Get All Deliveries",
+        "operationId": "getAllDeliveries",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "description": "Field to do a search by user",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "User ID to search",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "0"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Choose a page number in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Choose a page size in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the answer by a field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          },
+          {
+            "name": "sortDir",
+            "in": "query",
+            "description": "Sort the answer by a direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Deliveries obtained",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "delivery-controller"
+        ],
+        "summary": "Create a Delivery",
+        "operationId": "createOne",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Delivery Created",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryDTOResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values entry"
+          },
+          "404": {
+            "description": "Order Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/products/{id}/price": {
+      "patch": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Update price of a Product by id",
+        "operationId": "updatePrice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Product ID to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Product's price Updated",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/products/name/{name}/amount": {
+      "patch": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Update amount of a Product by name",
+        "operationId": "registerProductEntry",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Product name to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Product's amount Updated",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/deliveries/{id}/delivered": {
+      "patch": {
+        "tags": [
+          "delivery-controller"
+        ],
+        "summary": "Mark a Delivery as delivered",
+        "operationId": "orderDelivered",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Delivery ID to mark as delivered",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delivery Marked as delivered",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Delivery Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/users/email/{email}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get a User by email",
+        "operationId": "getByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "User email to search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/users/dni/{dni}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get a User by dni",
+        "operationId": "getByDni",
+        "parameters": [
+          {
+            "name": "dni",
+            "in": "path",
+            "description": "User DNI to search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/products/name/{name}": {
+      "get": {
+        "tags": [
+          "product-controller"
+        ],
+        "summary": "Get a Product by name",
+        "operationId": "getByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Name product to search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Product Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/orders": {
+      "get": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Get All Orders",
+        "operationId": "getAll_1",
+        "parameters": [
+          {
+            "name": "delivered",
+            "in": "query",
+            "description": "Condition to get orders only delivered or not delivered",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Choose a page number in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Choose a page size in the search",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the answer by a field",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "isDelivered"
+            }
+          },
+          {
+            "name": "sortDir",
+            "in": "query",
+            "description": "Sort the answer by a direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Orders obtained",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrdersResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          }
+        }
+      }
+    },
+    "/api/order-picker/orders/{id}": {
+      "get": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Get an Order by id",
+        "operationId": "getOneById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order ID to search",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Orders"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Order Not Found"
+          }
+        }
+      }
+    },
+    "/api/order-picker/orders/user/{idUser}/{id}": {
+      "get": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Get an Order by user and id",
+        "operationId": "getOneByIdAndUser",
+        "parameters": [
+          {
+            "name": "idUser",
+            "in": "path",
+            "description": "User ID to search your order",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Product ID to search",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderInformation"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "User Not Found or Order Not Found or Order Not Belong to User"
+          }
+        }
+      }
+    },
+    "/api/order-picker/deliveries/{id}": {
+      "get": {
+        "tags": [
+          "delivery-controller"
+        ],
+        "summary": "Get a Delivery by id",
+        "operationId": "getOneById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Delivery ID to search",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delivery Found",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryInformation"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Delivery Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserDTO": {
+        "required": [
+          "address",
+          "dni",
+          "email",
+          "fullName",
+          "password",
+          "phone",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dni": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "address": {
+            "maxLength": 100,
+            "minLength": 5,
+            "type": "string"
+          },
+          "phone": {
+            "maxLength": 20,
+            "minLength": 7,
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "EMPLOYEE",
+              "ADMIN"
+            ]
+          }
+        }
+      },
+      "ProductDTO": {
+        "required": [
+          "amount",
+          "name",
+          "price"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 5,
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "OrderDTO": {
+        "required": [
+          "products"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "products": {
+            "maxItems": 25,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delivered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 5,
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updateAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderDTOResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delivered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeliveryDTO": {
+        "required": [
+          "off",
+          "order"
+        ],
+        "type": "object",
+        "properties": {
+          "delivery": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "off": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "payed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeliveryDTOResponse": {
+        "type": "object",
+        "properties": {
+          "delivery": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "off": {
+            "type": "number",
+            "format": "double"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
+          },
+          "userAddress": {
+            "type": "string"
+          },
+          "userPhone": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "payed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AuthenticationRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDTO"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOne": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProductResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDTO"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOne": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Orders": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "userAddress": {
+            "type": "string"
+          },
+          "userPhone": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDelivered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrdersResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Orders"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOne": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrderInformation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDelivered": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrderUserResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderInformation"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOne": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeliveryInformation": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string"
+          },
+          "delivery": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "off": {
+            "type": "number",
+            "format": "double"
+          },
+          "orderDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userAddress": {
+            "type": "string"
+          },
+          "isCompleted": {
+            "type": "boolean"
+          },
+          "isPayed": {
+            "type": "boolean"
+          },
+          "userPhone": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
+          }
+        }
+      },
+      "DeliveryResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryInformation"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOne": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

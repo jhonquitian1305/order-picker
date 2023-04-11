@@ -16,7 +16,7 @@ public class MapperOrder {
                 .id(orderDTO.getId())
                 .orderDescription(orderDTO.getOrderDescription())
                 .totalPrice(orderDTO.getTotalPrice())
-                .isDelivered(orderDTO.isDelivered())
+                .isDelivered(false)
                 .client(client)
                 .products(products)
                 .build();

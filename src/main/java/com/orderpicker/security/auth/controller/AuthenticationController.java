@@ -4,6 +4,11 @@ import com.orderpicker.security.auth.dto.AuthenticationRequest;
 import com.orderpicker.security.auth.response.AuthenticationResponse;
 import com.orderpicker.security.auth.service.AuthenticationService;
 import com.orderpicker.user.application.exception.UserBadRequestException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +28,24 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
+    @Operation(summary = "Login")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Login successfully",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid values entry",
+                    content = @Content
+            )
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request,

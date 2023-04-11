@@ -5,6 +5,13 @@ import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,54 +35,280 @@ public class ProductController {
 
     private final @NonNull MapperProduct mapperProduct;
 
+    @Operation(summary = "Create a Product")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Product Created",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid values entry",
+                    content = @Content
+            )
+    })
     @PostMapping
-    ResponseEntity<ProductDTO> saveOne(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+    ResponseEntity<ProductDTO> saveOne(
+            @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult
+    ){
         if(bindingResult.hasErrors()){
             throw new ProductBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.saveOne(productDTO)), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get a Product by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @GetMapping(ENDPOINT_PRODUCT_ID)
-    ResponseEntity<ProductDTO> getById(@PathVariable("id") Long id){
+    ResponseEntity<ProductDTO> getById(
+            @Parameter(description = "Product ID to search")
+            @PathVariable("id") Long id
+    ){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.getById(id)), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get All Products")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "All Products Obtained",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductResponse.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            )
+    }
+    )
     @GetMapping
     ResponseEntity<ProductResponse> getAll(
+            @Parameter(description = "Choose a page number in the search")
             @RequestParam(value = "pageNumber", defaultValue = PRODUCT_DEFAULT_NUMBER_PAGE, required = false) int pageNumber,
+            @Parameter(description = "Choose a page size in the search")
             @RequestParam(value = "pageSize", defaultValue = PRODUCT_DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @Parameter(description = "Sort the answer by a field")
             @RequestParam(value = "sortBy", defaultValue = PRODUCT_DEFAULT_SORT_BY, required = false) String sortBy,
+            @Parameter(description = "Sort the answer by a direction")
             @RequestParam(value = "sortDir", defaultValue = PRODUCT_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         return new ResponseEntity<>(this.productService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get a Product by name")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product Found",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @GetMapping(ENDPOINT_PRODUCT_NAME)
-    ResponseEntity<ProductDTO> getByName(@PathVariable("name") String name){
+    ResponseEntity<ProductDTO> getByName(
+            @Parameter(description = "Name product to search")
+            @PathVariable("name") String name
+    ){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.getByName(name)), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update a Product by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @PutMapping(ENDPOINT_PRODUCT_ID)
-    ResponseEntity<ProductDTO> updateOneById(@PathVariable("id") Long id, @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+    ResponseEntity<ProductDTO> updateOneById(
+            @Parameter(description = "Product ID to be updated")
+            @PathVariable("id") Long id,
+            @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult
+    ){
         if(bindingResult.hasErrors()){
             throw new ProductBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updateOneById(id, productDTO)), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update price of a Product by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product's price Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @PatchMapping(ENDPOINT_PRODUCT_PRICE)
-    ResponseEntity<ProductDTO> updatePrice(@PathVariable("id") Long id, @RequestBody Double price){
+    ResponseEntity<ProductDTO> updatePrice(
+            @Parameter(description = "Product ID to be updated")
+            @PathVariable("id") Long id,
+            @RequestBody Double price
+    ){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updatePrice(id, price)), HttpStatus.OK);
     }
 
+    @Operation(summary = "Update amount of a Product by name")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product's amount Updated",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @PatchMapping(ENDPOINT_PRODUCT_AMOUNT)
-    ResponseEntity<ProductDTO> registerProductEntry(@PathVariable("name") String name, @RequestBody int amount){
+    ResponseEntity<ProductDTO> registerProductEntry(
+            @Parameter(description = "Product name to be updated")
+            @PathVariable("name") String name,
+            @RequestBody int amount
+    ){
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.registerProductEntry(name, amount)), HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete a Product by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product Deleted",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content
+            )
+    })
     @DeleteMapping(ENDPOINT_PRODUCT_ID)
-    ResponseEntity<String> deleteOneById(@PathVariable("id") Long id){
+    ResponseEntity<String> deleteOneById(
+            @Parameter(description = "Product ID to be Deleted")
+            @PathVariable("id") Long id
+    ){
         this.productService.deleteOneById(id);
         return new ResponseEntity<>("Product deleted", HttpStatus.OK);
     }
