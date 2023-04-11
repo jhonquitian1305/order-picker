@@ -1,8 +1,8 @@
 package com.orderpicker.user.application.impl;
 
+import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.rol.Role;
-import com.orderpicker.user.application.exception.UserBadRequestException;
-import com.orderpicker.user.application.exception.UserNotFoundException;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
@@ -49,7 +49,7 @@ public class UserServiceImp implements UserService {
     public User getById(Long id) {
         Optional<User> userFound = this.userRepository.findById(id);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("The user with id %s doesn't exist".formatted(id));
+            throw new NotFoundException("The user with id %s doesn't exist".formatted(id));
         }
         return userFound.get();
     }
@@ -77,7 +77,7 @@ public class UserServiceImp implements UserService {
     public User getByDni(String dni) {
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("The user with dni %s doesn't exist".formatted(dni));
+            throw new NotFoundException("The user with dni %s doesn't exist".formatted(dni));
         }
         return userFound.get();
     }
@@ -86,7 +86,7 @@ public class UserServiceImp implements UserService {
     public User getByEmail(String email) {
         Optional<User> userFound = this.userRepository.findByEmail(email);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("User with email %s doesn't exist".formatted(email));
+            throw new NotFoundException("User with email %s doesn't exist".formatted(email));
         }
         return userFound.get();
     }
@@ -97,7 +97,7 @@ public class UserServiceImp implements UserService {
 
         if(!userFound.getRole().equals(Role.ADMIN)){
             if(!userDTO.getRole().equals(userFound.getRole())){
-                throw new UserNotFoundException("Role not found");
+                throw new NotFoundException("Role not found");
             }
         }
 
@@ -119,7 +119,7 @@ public class UserServiceImp implements UserService {
         User userFound = this.getByEmail(userEmail);
         if(userFound.getRole() != Role.ADMIN){
             if(!id.equals(userFound.getId())){
-                throw new UserNotFoundException("User with id %s not found".formatted(id));
+                throw new NotFoundException("User with id %s not found".formatted(id));
             }
         }
     }
@@ -129,7 +129,7 @@ public class UserServiceImp implements UserService {
         User userFound = this.getByEmail(userEmail);
         if(!userFound.getRole().equals(Role.ADMIN)){
             if(!dni.equals(userFound.getDni())){
-                throw new UserNotFoundException("User with dni %s not found".formatted(dni));
+                throw new NotFoundException("User with dni %s not found".formatted(dni));
             }
         }
     }
@@ -139,7 +139,7 @@ public class UserServiceImp implements UserService {
         User userFound = this.getByEmail(userEmail);
         if(!userFound.getRole().equals(Role.ADMIN)){
             if(!email.equals(userFound.getEmail())){
-                throw new UserNotFoundException("User with email %s not found".formatted(email));
+                throw new NotFoundException("User with email %s not found".formatted(email));
             }
         }
     }
@@ -148,21 +148,21 @@ public class UserServiceImp implements UserService {
     public void validateRole(String userEmail) {
         User userFound = this.userRepository.findByEmail(userEmail).get();
         if(!userFound.getRole().equals(Role.ADMIN)){
-            throw new UserNotFoundException("Request not found");
+            throw new NotFoundException("Request not found");
         }
     }
 
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){
-            throw new UserBadRequestException("The user with dni %s already exist".formatted(dni));
+            throw new BadRequestException("The user with dni %s already exist".formatted(dni));
         }
     }
 
     protected void findByEmail(String email){
         Optional<User> userFound = this.userRepository.findByEmail(email);
         if(userFound.isPresent()){
-            throw new UserBadRequestException("The user with email %s already exist".formatted(email));
+            throw new BadRequestException("The user with email %s already exist".formatted(email));
         }
     }
 
