@@ -36,4 +36,13 @@ public class UserRepositoryTest {
                 .role(Role.USER)
                 .build();
     }
+
+    @DisplayName("Test UserRepository, Test to save a user")
+    @Test
+    void createOne(){
+        User userSaved = this.userRepository.save(user);
+
+        assertNotNull(userSaved);
+        assertThat(userSaved.getId()).isPositive();
+    }
 }
