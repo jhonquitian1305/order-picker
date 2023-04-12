@@ -1,7 +1,7 @@
 package com.orderpicker.product.application.usecase;
 
-import com.orderpicker.product.application.exception.ProductBadRequestException;
-import com.orderpicker.product.application.exception.ProductNotFoundException;
+import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.domain.repository.ProductRepository;
@@ -41,7 +41,7 @@ public class ProductServiceImp implements ProductService {
     public Product getById(Long id) {
         Optional<Product> productFound = this.productRepository.findById(id);
         if(productFound.isEmpty()){
-            throw new ProductNotFoundException("Product whit id %s doesn't exist".formatted(id));
+            throw new NotFoundException("Product with id %s doesn't exist".formatted(id));
         }
         return productFound.get();
     }
@@ -69,7 +69,7 @@ public class ProductServiceImp implements ProductService {
     public Product getByName(String name) {
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isEmpty()){
-            throw new ProductNotFoundException("Product with name %s doesn't exist".formatted(name));
+            throw new NotFoundException("Product with name %s doesn't exist".formatted(name));
         }
         return productFound.get();
     }
@@ -128,11 +128,11 @@ public class ProductServiceImp implements ProductService {
     public void verifyAmountInOneOrder(List<Product> products, List<Product> productsDTO) {
         products.forEach(product -> {
             if(product.getAmount() == 0){
-                throw new ProductBadRequestException(String.format("At the moment there is no %s", product.getName()));
+                throw new BadRequestException(String.format("At the moment there is no %s", product.getName()));
             }
             productsDTO.forEach(productDTO -> {
                 if(product.getName().equals(productDTO.getName()) && productDTO.getAmount() > product.getAmount()){
-                    throw new ProductBadRequestException(String.format("Amount %s is greater than the amount there is that is %s", productDTO.getAmount(), product.getAmount()));
+                    throw new BadRequestException(String.format("Amount %s is greater than the amount there is that is %s", productDTO.getAmount(), product.getAmount()));
                 }
             });
         });
@@ -141,13 +141,13 @@ public class ProductServiceImp implements ProductService {
     protected void findByName(String name){
         Optional<Product> productFound = this.productRepository.findByName(name);
         if(productFound.isPresent()){
-            throw new ProductBadRequestException("Product with name %s already exists".formatted(name));
+            throw new BadRequestException("Product with name %s already exists".formatted(name));
         }
     }
 
     protected void verifyAmountEntered(int amount){
         if(amount < 1){
-            throw new ProductBadRequestException(String.format("Value entered %s must be greater than 0", amount));
+            throw new BadRequestException(String.format("Value entered %s must be greater than 0", amount));
         }
     }
 }
