@@ -2,9 +2,6 @@ package com.orderpicker.user.domain.repository;
 
 import com.orderpicker.rol.Role;
 import com.orderpicker.user.domain.model.User;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles(profiles = "test")
@@ -91,5 +87,19 @@ public class UserRepositoryTest {
 
         assertNotNull(userFound);
         assertEquals(user.getEmail(), userFound.get().getEmail());
+    }
+
+    @DisplayName("Test UserRepository, Test when to search a user that not exists")
+    @Test
+    void userNotFound(){
+        this.userRepository.save(user);
+
+        Optional<User> userSearchById = this.userRepository.findById(5L);
+        Optional<User> userSearchByDni = this.userRepository.findByDni("34544535443");
+        Optional<User> userSearchByEmail = this.userRepository.findByEmail("jhondoe@mail.com");
+
+        assertTrue(userSearchById.isEmpty());
+        assertTrue(userSearchByDni.isEmpty());
+        assertTrue(userSearchByEmail.isEmpty());
     }
 }
