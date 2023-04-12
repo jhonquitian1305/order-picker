@@ -145,8 +145,8 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void validateRole(String userEmail) {
-        User userFound = this.userRepository.findByEmail(userEmail).get();
-        if(!userFound.getRole().equals(Role.ADMIN)){
+        Optional<User> userFound = this.userRepository.findByEmail(userEmail);
+        if(userFound.isPresent() && !userFound.get().getRole().equals(Role.ADMIN)){
             throw new NotFoundException("Request not found");
         }
     }
