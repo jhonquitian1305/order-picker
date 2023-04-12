@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
@@ -56,5 +58,16 @@ public class UserRepositoryTest {
         Optional<User> userFound = this.userRepository.findById(user.getId());
 
         assertNotNull(userFound);
+    }
+
+    @DisplayName("Test UserRepository, Test to get all users")
+    @Test
+    void getAll(){
+        this.userRepository.save(user);
+
+        List<User> listUsers = this.userRepository.findAll();
+
+        assertNotNull(listUsers);
+        assertEquals(1, listUsers.size());
     }
 }
