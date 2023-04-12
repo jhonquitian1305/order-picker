@@ -35,7 +35,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User save(UserDTO userDTO) {
         if(userDTO.getRole().equals(Role.ADMIN)){
-            throw new UserBadRequestException("Cannot be %s. Allowed roles are %s and %s".formatted(Role.ADMIN, Role.EMPLOYEE, Role.USER));
+            throw new BadRequestException("Cannot be %s. Allowed roles are %s and %s".formatted(Role.ADMIN, Role.EMPLOYEE, Role.USER));
         }
         this.findByDni(userDTO.getDni());
         this.findByEmail(userDTO.getEmail());
