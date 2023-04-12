@@ -1,8 +1,8 @@
 package com.orderpicker.order.application.usecase;
 
 import com.orderpicker.delivery.domain.model.Delivery;
-import com.orderpicker.order.application.exception.OrderBadRequestException;
-import com.orderpicker.order.application.exception.OrderNotFoundException;
+import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.domain.repository.OrderRepository;
@@ -87,7 +87,7 @@ public class OrderServiceImp implements OrderService {
             boolean delivered = Boolean.parseBoolean(condition);
             ordersFound = this.orderRepository.getAllDelivered(delivered, pageable);
         }else{
-            throw new OrderBadRequestException(String.format("Data url incorrect in %s must be true or false", condition));
+            throw new BadRequestException(String.format("Data url incorrect in %s must be true or false", condition));
         }
 
         return OrdersResponse.builder()
@@ -104,7 +104,7 @@ public class OrderServiceImp implements OrderService {
     public Orders getOneById(Long id) {
         Orders orderFound = this.orderRepository.getOneById(id);
         if(orderFound == null){
-            throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
+            throw new NotFoundException(String.format("Order with id %s doesn't exist", id));
         }
         return orderFound;
     }
@@ -116,7 +116,7 @@ public class OrderServiceImp implements OrderService {
 
         OrderInformation orderUserFound = this.orderRepository.getOneByIdAndUser(idUser, id);
         if(orderUserFound == null){
-            throw new OrderNotFoundException(String.format("Order with id %s doesn't belong to user with id %s", id, idUser));
+            throw new NotFoundException(String.format("Order with id %s doesn't belong to user with id %s", id, idUser));
         }
 
         return orderUserFound;
@@ -125,7 +125,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     public Order markAsDelivered(Order order) {
         if(order.isDelivered()){
-            throw new OrderBadRequestException(String.format("Order with id %s already delivered", order.getId()));
+            throw new BadRequestException(String.format("Order with id %s already delivered", order.getId()));
         }
         order.setDelivered(true);
         return this.orderRepository.save(order);
@@ -135,7 +135,7 @@ public class OrderServiceImp implements OrderService {
     public Order getOneByIdInDelivery(Long id) {
         Optional<Order> orderFound = this.orderRepository.findById(id);
         if(orderFound.isEmpty()){
-            throw new OrderNotFoundException(String.format("Order with id %s doesn't exist", id));
+            throw new NotFoundException(String.format("Order with id %s doesn't exist", id));
         }
         return orderFound.get();
     }
@@ -155,7 +155,7 @@ public class OrderServiceImp implements OrderService {
     public void validateRole(String userEmail) {
         User userFound = this.userService.getByEmail(userEmail);
         if(!userFound.getRole().equals(Role.EMPLOYEE) && !userFound.getRole().equals(Role.ADMIN)){
-            throw new OrderNotFoundException("Request not found");
+            throw new NotFoundException("Request not found");
         }
     }
 
@@ -185,7 +185,7 @@ public class OrderServiceImp implements OrderService {
     protected void negativeAmountProduct(List<Product> productsDTO){
         for(Product product: productsDTO){
             if(product.getAmount() < 1){
-                throw new OrderBadRequestException(String.format("%s product to must be greater than 0", product.getName()));
+                throw new BadRequestException(String.format("%s product to must be greater than 0", product.getName()));
             }
         }
     }
