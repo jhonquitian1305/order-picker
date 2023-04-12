@@ -165,8 +165,8 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    protected void encryptPassword(UserDTO studentDTO){
-        String hashPass = encryptService.encryptPassword(studentDTO.getPassword());
-        studentDTO.setPassword(hashPass);
+    protected void encryptPassword(UserDTO userDTO){
+        String hashPass = this.encryptService.encryptPassword(userDTO.getPassword());
+        userDTO.setPassword(hashPass);
     }
 }
