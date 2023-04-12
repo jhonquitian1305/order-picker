@@ -1,12 +1,12 @@
 package com.orderpicker.delivery.infrastructure.controller;
 
-import com.orderpicker.delivery.application.exception.DeliveryBadRequestException;
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryInformation;
 import com.orderpicker.delivery.infrastructure.response.DeliveryDTOResponse;
 import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 import com.orderpicker.delivery.infrastructure.service.DeliveryService;
+import com.orderpicker.exception.BadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -69,7 +69,7 @@ public class DeliveryController {
             BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            throw new DeliveryBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperDelivery.mapDeliveryDTOResponse(this.deliveryService.createOne(deliveryDTO)), HttpStatus.CREATED);
     }
