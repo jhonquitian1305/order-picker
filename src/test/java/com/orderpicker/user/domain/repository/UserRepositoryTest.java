@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -44,5 +46,15 @@ public class UserRepositoryTest {
 
         assertNotNull(userSaved);
         assertThat(userSaved.getId()).isPositive();
+    }
+
+    @DisplayName("Test UserRepository, Test to get a user by id")
+    @Test
+    void getOneById(){
+        this.userRepository.save(user);
+
+        Optional<User> userFound = this.userRepository.findById(user.getId());
+
+        assertNotNull(userFound);
     }
 }
