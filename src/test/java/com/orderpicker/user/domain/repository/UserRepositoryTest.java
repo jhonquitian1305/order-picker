@@ -81,4 +81,15 @@ public class UserRepositoryTest {
         assertNotNull(userFound);
         assertEquals(user.getDni(), userFound.get().getDni());
     }
+
+    @DisplayName("Test UserRepository, Test to get a user by email")
+    @Test
+    void getOneByEmail(){
+        this.userRepository.save(user);
+
+        Optional<User> userFound = this.userRepository.findByEmail(user.getEmail());
+
+        assertNotNull(userFound);
+        assertEquals(user.getEmail(), userFound.get().getEmail());
+    }
 }
