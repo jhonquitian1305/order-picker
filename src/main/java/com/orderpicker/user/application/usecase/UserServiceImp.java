@@ -94,10 +94,8 @@ public class UserServiceImp implements UserService {
     public User updateOne(Long id, UserDTO userDTO) {
         User userFound = this.getById(id);
 
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!userDTO.getRole().equals(userFound.getRole())){
+        if(!userFound.getRole().equals(Role.ADMIN) && !userDTO.getRole().equals(userFound.getRole())){
                 throw new NotFoundException("Role not found");
-            }
         }
 
         this.encryptPassword(userDTO);
@@ -116,30 +114,24 @@ public class UserServiceImp implements UserService {
     @Override
     public void validateUserRequestById(Long id, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(userFound.getRole() != Role.ADMIN){
-            if(!id.equals(userFound.getId())){
+        if(userFound.getRole() != Role.ADMIN && !id.equals(userFound.getId())){
                 throw new NotFoundException("User with id %s not found".formatted(id));
-            }
         }
     }
 
     @Override
     public void validateUserRequestByDni(String dni, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!dni.equals(userFound.getDni())){
+        if(!userFound.getRole().equals(Role.ADMIN) && !dni.equals(userFound.getDni())){
                 throw new NotFoundException("User with dni %s not found".formatted(dni));
-            }
         }
     }
 
     @Override
     public void validateUserRequestByEmail(String email, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!email.equals(userFound.getEmail())){
+        if(!userFound.getRole().equals(Role.ADMIN) && !email.equals(userFound.getEmail())){
                 throw new NotFoundException("User with email %s not found".formatted(email));
-            }
         }
     }
 
