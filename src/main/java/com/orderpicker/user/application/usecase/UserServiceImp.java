@@ -1,8 +1,8 @@
-package com.orderpicker.user.application.impl;
+package com.orderpicker.user.application.usecase;
 
+import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.rol.Role;
-import com.orderpicker.user.application.exception.UserBadRequestException;
-import com.orderpicker.user.application.exception.UserNotFoundException;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
 import com.orderpicker.user.domain.repository.UserRepository;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,7 +35,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User save(UserDTO userDTO) {
         if(userDTO.getRole().equals(Role.ADMIN)){
-            throw new UserBadRequestException("Cannot be %s. Allowed roles are %s and %s".formatted(Role.ADMIN, Role.EMPLOYEE, Role.USER));
+            throw new BadRequestException("Cannot be %s. Allowed roles are %s and %s".formatted(Role.ADMIN, Role.EMPLOYEE, Role.USER));
         }
         this.findByDni(userDTO.getDni());
         this.findByEmail(userDTO.getEmail());
@@ -49,7 +48,7 @@ public class UserServiceImp implements UserService {
     public User getById(Long id) {
         Optional<User> userFound = this.userRepository.findById(id);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("The user with id %s doesn't exist".formatted(id));
+            throw new NotFoundException("The user with id %s doesn't exist".formatted(id));
         }
         return userFound.get();
     }
@@ -77,7 +76,7 @@ public class UserServiceImp implements UserService {
     public User getByDni(String dni) {
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("The user with dni %s doesn't exist".formatted(dni));
+            throw new NotFoundException("The user with dni %s doesn't exist".formatted(dni));
         }
         return userFound.get();
     }
@@ -86,7 +85,7 @@ public class UserServiceImp implements UserService {
     public User getByEmail(String email) {
         Optional<User> userFound = this.userRepository.findByEmail(email);
         if(userFound.isEmpty()){
-            throw new UserNotFoundException("User with email %s doesn't exist".formatted(email));
+            throw new NotFoundException("User with email %s doesn't exist".formatted(email));
         }
         return userFound.get();
     }
@@ -95,10 +94,8 @@ public class UserServiceImp implements UserService {
     public User updateOne(Long id, UserDTO userDTO) {
         User userFound = this.getById(id);
 
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!userDTO.getRole().equals(userFound.getRole())){
-                throw new UserNotFoundException("Role not found");
-            }
+        if(!userFound.getRole().equals(Role.ADMIN) && !userDTO.getRole().equals(userFound.getRole())){
+                throw new NotFoundException("Role not found");
         }
 
         this.encryptPassword(userDTO);
@@ -117,57 +114,51 @@ public class UserServiceImp implements UserService {
     @Override
     public void validateUserRequestById(Long id, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(userFound.getRole() != Role.ADMIN){
-            if(!id.equals(userFound.getId())){
-                throw new UserNotFoundException("User with id %s not found".formatted(id));
-            }
+        if(userFound.getRole() != Role.ADMIN && !id.equals(userFound.getId())){
+                throw new NotFoundException("User with id %s not found".formatted(id));
         }
     }
 
     @Override
     public void validateUserRequestByDni(String dni, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!dni.equals(userFound.getDni())){
-                throw new UserNotFoundException("User with dni %s not found".formatted(dni));
-            }
+        if(!userFound.getRole().equals(Role.ADMIN) && !dni.equals(userFound.getDni())){
+                throw new NotFoundException("User with dni %s not found".formatted(dni));
         }
     }
 
     @Override
     public void validateUserRequestByEmail(String email, String userEmail) {
         User userFound = this.getByEmail(userEmail);
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            if(!email.equals(userFound.getEmail())){
-                throw new UserNotFoundException("User with email %s not found".formatted(email));
-            }
+        if(!userFound.getRole().equals(Role.ADMIN) && !email.equals(userFound.getEmail())){
+                throw new NotFoundException("User with email %s not found".formatted(email));
         }
     }
 
     @Override
     public void validateRole(String userEmail) {
-        User userFound = this.userRepository.findByEmail(userEmail).get();
-        if(!userFound.getRole().equals(Role.ADMIN)){
-            throw new UserNotFoundException("Request not found");
+        Optional<User> userFound = this.userRepository.findByEmail(userEmail);
+        if(userFound.isPresent() && !userFound.get().getRole().equals(Role.ADMIN)){
+            throw new NotFoundException("Request not found");
         }
     }
 
     protected void findByDni(String dni){
         Optional<User> userFound = this.userRepository.findByDni(dni);
         if(userFound.isPresent()){
-            throw new UserBadRequestException("The user with dni %s already exist".formatted(dni));
+            throw new BadRequestException("The user with dni %s already exist".formatted(dni));
         }
     }
 
     protected void findByEmail(String email){
         Optional<User> userFound = this.userRepository.findByEmail(email);
         if(userFound.isPresent()){
-            throw new UserBadRequestException("The user with email %s already exist".formatted(email));
+            throw new BadRequestException("The user with email %s already exist".formatted(email));
         }
     }
 
-    protected void encryptPassword(UserDTO studentDTO){
-        String hashPass = encryptService.encryptPassword(studentDTO.getPassword());
-        studentDTO.setPassword(hashPass);
+    protected void encryptPassword(UserDTO userDTO){
+        String hashPass = this.encryptService.encryptPassword(userDTO.getPassword());
+        userDTO.setPassword(hashPass);
     }
 }

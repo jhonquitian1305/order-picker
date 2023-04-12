@@ -1,7 +1,5 @@
 package com.orderpicker.delivery.application.usecase;
 
-import com.orderpicker.delivery.application.exception.DeliveryBadRequestException;
-import com.orderpicker.delivery.application.exception.DeliveryNotFoundException;
 import com.orderpicker.delivery.application.mapper.MapperDelivery;
 import com.orderpicker.delivery.application.strategydeliveries.DeliveriesContext;
 import com.orderpicker.delivery.application.strategydeliveries.DeliveriesStrategy;
@@ -11,6 +9,8 @@ import com.orderpicker.delivery.infrastructure.dto.DeliveryDTO;
 import com.orderpicker.delivery.infrastructure.dto.DeliveryInformation;
 import com.orderpicker.delivery.infrastructure.response.DeliveryResponse;
 import com.orderpicker.delivery.infrastructure.service.DeliveryService;
+import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.infrastructure.service.OrderService;
 import lombok.NonNull;
@@ -41,7 +41,7 @@ public class DeliveryServiceImp implements DeliveryService {
         Order orderFound = this.orderService.getOneByIdInDelivery(deliveryDTO.getOrder());
 
         if(orderFound.getDelivery() != null){
-            throw new DeliveryBadRequestException(String.format("Order with id %s already is ordered", orderFound.getId()));
+            throw new BadRequestException(String.format("Order with id %s already is ordered", orderFound.getId()));
         }
 
         this.setTotalCost(deliveryDTO, orderFound);
@@ -81,11 +81,11 @@ public class DeliveryServiceImp implements DeliveryService {
     public void orderDelivered(Long id) {
         Optional<Delivery> deliveryFound =  this.deliveryRepository.findById(id);
         if(deliveryFound.isEmpty()){
-            throw new DeliveryNotFoundException(String.format("Delivery with id %s doesn't exist", id));
+            throw new NotFoundException(String.format("Delivery with id %s doesn't exist", id));
         }
         Order orderFound = deliveryFound.get().getOrder();
         if(deliveryFound.get().isCompleted()){
-            throw new DeliveryBadRequestException(String.format("Delivery with id %s already is delivered", id));
+            throw new BadRequestException(String.format("Delivery with id %s already is delivered", id));
         }
         this.orderService.markAsDelivered(orderFound);
         deliveryFound.get().setCompleted(true);

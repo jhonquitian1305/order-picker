@@ -1,6 +1,6 @@
 package com.orderpicker.product.infrastructure.controller;
 
-import com.orderpicker.product.application.exception.ProductBadRequestException;
+import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
@@ -61,7 +61,7 @@ public class ProductController {
             @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            throw new ProductBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.saveOne(productDTO)), HttpStatus.CREATED);
     }
@@ -203,7 +203,7 @@ public class ProductController {
             @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            throw new ProductBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperProduct.mapProductDTO(this.productService.updateOneById(id, productDTO)), HttpStatus.OK);
     }

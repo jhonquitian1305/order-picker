@@ -1,6 +1,6 @@
 package com.orderpicker.order.infrastructure.controller;
 
-import com.orderpicker.order.application.exception.OrderBadRequestException;
+import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.dto.OrderInformation;
@@ -71,7 +71,7 @@ public class OrderController {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         this.orderService.validateUserRequestById(idUser, userEmail);
         if(bindingResult.hasErrors()){
-            throw new OrderBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperOrder.mapOrderDTOResponse(this.orderService.createOrder(idUser, orderDTO)), HttpStatus.CREATED);
     }

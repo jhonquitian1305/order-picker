@@ -1,7 +1,7 @@
 package com.orderpicker.user.infrastructure.controller;
 
 
-import com.orderpicker.user.application.exception.UserBadRequestException;
+import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.infrastructure.dto.UserDTO;
 import com.orderpicker.user.infrastructure.response.UserResponse;
@@ -59,7 +59,7 @@ public class UserController {
             @Valid @RequestBody UserDTO userDTO, BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.save(userDTO)), HttpStatus.CREATED);
     }
@@ -245,7 +245,7 @@ public class UserController {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         this.userService.validateUserRequestById(id, userEmail);
         if(bindingResult.hasErrors()){
-            throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.mapperUser.mapUserDTO(this.userService.updateOne(id, userDTO)), HttpStatus.OK);
     }

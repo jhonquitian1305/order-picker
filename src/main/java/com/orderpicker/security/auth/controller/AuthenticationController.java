@@ -1,9 +1,9 @@
 package com.orderpicker.security.auth.controller;
 
+import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.security.auth.dto.AuthenticationRequest;
 import com.orderpicker.security.auth.response.AuthenticationResponse;
 import com.orderpicker.security.auth.service.AuthenticationService;
-import com.orderpicker.user.application.exception.UserBadRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -52,7 +52,7 @@ public class AuthenticationController {
             BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            throw new UserBadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
         return new ResponseEntity<>(this.authenticationService.authenticate(request), HttpStatus.OK);
     }
