@@ -70,4 +70,15 @@ public class UserRepositoryTest {
         assertNotNull(listUsers);
         assertEquals(1, listUsers.size());
     }
+
+    @DisplayName("Test UserRepository, Test to get a user by dni")
+    @Test
+    void getOneByDni(){
+        this.userRepository.save(user);
+
+        Optional<User> userFound = this.userRepository.findByDni(user.getDni());
+
+        assertNotNull(userFound);
+        assertEquals(user.getDni(), userFound.get().getDni());
+    }
 }
