@@ -114,4 +114,15 @@ public class UserRepositoryTest {
 
         assertEquals("jhondoe@mail.com", userUpdated.get().getEmail());
     }
+
+    @DisplayName("Test UserRepository, Test to delete a user")
+    @Test
+    void deleteOne(){
+        this.userRepository.save(user);
+
+        this.userRepository.deleteById(user.getId());
+        Optional<User> userDeleted = this.userRepository.findById(user.getId());
+
+        assertTrue(userDeleted.isEmpty());
+    }
 }
