@@ -102,4 +102,16 @@ public class UserRepositoryTest {
         assertTrue(userSearchByDni.isEmpty());
         assertTrue(userSearchByEmail.isEmpty());
     }
+
+    @DisplayName("Test UserRepository, Test to update a user")
+    @Test
+    void updateOne(){
+        this.userRepository.save(user);
+
+        user.setEmail("jhondoe@mail.com");
+        this.userRepository.save(user);
+        Optional<User> userUpdated = this.userRepository.findByEmail("jhondoe@mail.com");
+
+        assertEquals("jhondoe@mail.com", userUpdated.get().getEmail());
+    }
 }
