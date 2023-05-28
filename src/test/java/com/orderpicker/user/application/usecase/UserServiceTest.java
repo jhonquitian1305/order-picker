@@ -164,4 +164,16 @@ public class UserServiceTest {
         assertNotNull(userFoundByEmail);
         assertEquals(this.userDTO.getEmail(), userFoundByEmail.getEmail());
     }
+
+    @DisplayName("Test UserService, test to get a user by email when doesn't exist")
+    @Test
+    void failGetOneByEmail(){
+        given(this.userRepository.findByEmail(anyString())).willReturn(Optional.empty());
+
+        NotFoundException userNotFoundByEmail = assertThrows(NotFoundException.class, () -> {
+            this.userService.getByEmail("email@mail.com");
+        });
+
+        assertEquals("User with email %s doesn't exist".formatted("email@mail.com"), userNotFoundByEmail.getMessage());
+    }
 }
