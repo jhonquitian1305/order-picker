@@ -139,6 +139,7 @@ public class UserServiceTest {
         User userFoundByDni = this.userService.getByDni(this.userDTO.getDni());
 
         assertNotNull(userFoundByDni);
+        assertEquals(this.userDTO.getDni(), userFoundByDni.getDni());
     }
 
     @DisplayName("Test UserService, test to get a user by dni when doesn't exist")
