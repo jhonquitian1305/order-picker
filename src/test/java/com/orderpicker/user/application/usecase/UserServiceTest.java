@@ -151,4 +151,15 @@ public class UserServiceTest {
 
         assertEquals("User with dni %s doesn't exist".formatted("255971121"), userNotFoundByDni.getMessage());
     }
+
+    @DisplayName("Test UserService, Test to get a user by email")
+    @Test
+    void getOneByEmail(){
+        given(this.userRepository.findByEmail(this.userDTO.getEmail())).willReturn(Optional.of(user));
+
+        User userFoundByEmail = this.userService.getByEmail(this.userDTO.getEmail());
+
+        assertNotNull(userFoundByEmail);
+        assertEquals(this.userDTO.getEmail(), userFoundByEmail.getEmail());
+    }
 }
