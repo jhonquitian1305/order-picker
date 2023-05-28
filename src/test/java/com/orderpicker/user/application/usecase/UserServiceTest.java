@@ -1,6 +1,7 @@
 package com.orderpicker.user.application.usecase;
 
 import com.orderpicker.exception.BadRequestException;
+import com.orderpicker.exception.NotFoundException;
 import com.orderpicker.rol.Role;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
@@ -18,8 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -116,5 +116,17 @@ public class UserServiceTest {
         User userFoundById = this.userService.getById(this.userDTO.getId());
 
         assertNotNull(userFoundById);
+    }
+
+    @DisplayName("Test UserService, test to get a user by id when doesn't exist")
+    @Test
+    void failGetOneById(){
+        given(this.userRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        NotFoundException userNotFoundById = assertThrows(NotFoundException.class, () -> {
+            this.userService.getById(1L);
+        });
+
+        assertEquals("User with id %s doesn't exist".formatted(1L), userNotFoundById.getMessage());
     }
 }
