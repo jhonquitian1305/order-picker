@@ -139,4 +139,16 @@ public class UserServiceTest {
 
         assertNotNull(userFoundByDni);
     }
+
+    @DisplayName("Test UserService, test to get a user by dni when doesn't exist")
+    @Test
+    void failGetOneByDni(){
+        given(this.userRepository.findByDni(anyString())).willReturn(Optional.empty());
+
+        NotFoundException userNotFoundByDni = assertThrows(NotFoundException.class, () -> {
+            this.userService.getByDni("255971121");
+        });
+
+        assertEquals("User with dni %s doesn't exist".formatted("255971121"), userNotFoundByDni.getMessage());
+    }
 }
