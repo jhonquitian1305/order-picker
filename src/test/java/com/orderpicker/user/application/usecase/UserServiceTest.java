@@ -129,4 +129,14 @@ public class UserServiceTest {
 
         assertEquals("User with id %s doesn't exist".formatted(1L), userNotFoundById.getMessage());
     }
+
+    @DisplayName("Test UserService, Test to get a user by dni")
+    @Test
+    void getOneByDni(){
+        given(this.userRepository.findByDni(this.userDTO.getDni())).willReturn(Optional.of(user));
+
+        User userFoundByDni = this.userService.getByDni(this.userDTO.getDni());
+
+        assertNotNull(userFoundByDni);
+    }
 }
