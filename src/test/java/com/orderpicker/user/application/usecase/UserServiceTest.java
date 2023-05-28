@@ -1,5 +1,6 @@
 package com.orderpicker.user.application.usecase;
 
+import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.rol.Role;
 import com.orderpicker.user.application.mapper.MapperUser;
 import com.orderpicker.user.domain.model.User;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -20,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = "test")
@@ -77,5 +81,18 @@ public class UserServiceTest {
 
         assertNotNull(userSaved);
         assertNotEquals(Role.ADMIN, userSaved.getRole());
+    }
+
+    @DisplayName("Test UserService, Test to save a user when the dni exists")
+    @Test
+    void failSaveWhenDniExists(){
+        given(this.userRepository.findByDni(this.userDTO.getDni())).willReturn(Optional.of(user));
+
+        BadRequestException userFoundDni = assertThrows(BadRequestException.class, () -> {
+            this.userService.save(this.userDTO);
+        });
+
+        verify(this.userRepository, never()).save(any(User.class));
+        assertEquals("The user with dni %s already exists".formatted(this.userDTO.getDni()), userFoundDni.getMessage());
     }
 }
