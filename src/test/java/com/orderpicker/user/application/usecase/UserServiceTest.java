@@ -116,6 +116,7 @@ public class UserServiceTest {
         User userFoundById = this.userService.getById(this.userDTO.getId());
 
         assertNotNull(userFoundById);
+        assertEquals(this.userDTO.getId(), userFoundById.getId());
     }
 
     @DisplayName("Test UserService, test to get a user by id when doesn't exist")
