@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -107,5 +106,15 @@ public class UserServiceTest {
 
         verify(this.userRepository, never()).save(any(User.class));
         assertEquals("The user with email %s already exists".formatted(this.userDTO.getEmail()), userFoundEmail.getMessage());
+    }
+
+    @DisplayName("Test UserService, Test to get a user by id")
+    @Test
+    void getOneById(){
+        given(this.userRepository.findById(this.userDTO.getId())).willReturn(Optional.of(user));
+
+        User userFoundById = this.userService.getById(this.userDTO.getId());
+
+        assertNotNull(userFoundById);
     }
 }
