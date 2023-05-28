@@ -95,4 +95,17 @@ public class UserServiceTest {
         verify(this.userRepository, never()).save(any(User.class));
         assertEquals("The user with dni %s already exists".formatted(this.userDTO.getDni()), userFoundDni.getMessage());
     }
+
+    @DisplayName("Test UserService, Test to a save a user when the email exists")
+    @Test
+    void failSaveWhenEmailExists(){
+        given(this.userRepository.findByEmail(this.userDTO.getEmail())).willReturn(Optional.of(user));
+
+        BadRequestException userFoundEmail = assertThrows(BadRequestException.class, () -> {
+           this.userService.save(this.userDTO);
+        });
+
+        verify(this.userRepository, never()).save(any(User.class));
+        assertEquals("The user with email %s already exists".formatted(this.userDTO.getEmail()), userFoundEmail.getMessage());
+    }
 }
