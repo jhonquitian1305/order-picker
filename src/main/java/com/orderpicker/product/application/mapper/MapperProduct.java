@@ -12,6 +12,7 @@ public class MapperProduct {
                 .name(productDTO.getName())
                 .amount(productDTO.getAmount())
                 .price(productDTO.getPrice())
+                .imageUrl(productDTO.getImageUrl())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class MapperProduct {
                 .name(product.getName())
                 .amount(product.getAmount())
                 .price(product.getPrice())
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 
@@ -28,6 +30,7 @@ public class MapperProduct {
         product.setName(productDTO.getName());
         product.setAmount(productDTO.getAmount());
         product.setPrice(product.getPrice());
+        product.setImageUrl(productDTO.getImageUrl());
 
         return product;
     }
