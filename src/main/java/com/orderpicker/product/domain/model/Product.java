@@ -40,4 +40,7 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updateAt;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

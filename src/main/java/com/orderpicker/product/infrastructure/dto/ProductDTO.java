@@ -23,4 +23,7 @@ public class ProductDTO {
     @NotNull(message = "The price field couldn't be null")
     @Positive(message = "The price field must be greater than 0")
     private Double price;
+
+    private String imageUrl;
+
 }
