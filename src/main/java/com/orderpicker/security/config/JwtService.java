@@ -1,5 +1,6 @@
 package com.orderpicker.security.config;
 
+import com.orderpicker.user.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,7 +17,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private final static String SECRET_KEY = "597033733676397924423F4528482B4D6251655468576D5A7134743777217A25";
+    private static final String SECRET_KEY = "597033733676397924423F4528482B4D6251655468576D5A7134743777217A25";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -27,8 +28,12 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User user){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("role", user.getRole());
+
+        return generateToken(claims, user);
     }
 
     public String generateToken(
@@ -40,7 +45,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 30)))
+                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 30)))
                 .signWith(this.getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
