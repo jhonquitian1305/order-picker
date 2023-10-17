@@ -1,7 +1,6 @@
 package com.orderpicker.order.domain.model;
 
 import com.orderpicker.delivery.domain.model.Delivery;
-import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.user.domain.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -40,10 +39,6 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "client_dni")
     private User client;
-
-    @ManyToMany
-    @Column(nullable = false, length = 25)
-    private List<Product> products;
 
     @CreationTimestamp
     @Column(name = "created_at")

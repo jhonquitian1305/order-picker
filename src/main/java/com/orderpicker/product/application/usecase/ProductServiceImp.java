@@ -6,6 +6,7 @@ import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.domain.repository.ProductRepository;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
+import com.orderpicker.product.infrastructure.dto.ProductDetails;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import lombok.NonNull;
@@ -136,6 +137,11 @@ public class ProductServiceImp implements ProductService {
                 }
             });
         });
+    }
+
+    @Override
+    public List<ProductDetails> findDetailsProductsByIdOrder(Long idOrder) {
+        return this.productRepository.findDetailsProductsByIdOrder(idOrder);
     }
 
     protected void findByName(String name){

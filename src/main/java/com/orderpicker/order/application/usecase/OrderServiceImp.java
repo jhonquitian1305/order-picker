@@ -12,7 +12,13 @@ import com.orderpicker.order.infrastructure.dto.Orders;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
+import com.orderpicker.orderdetail.domain.model.OrderDetail;
+import com.orderpicker.orderdetail.infrastructure.dto.OrderDetailDTO;
+import com.orderpicker.orderdetail.infrastructure.service.OrderDetailService;
 import com.orderpicker.product.domain.model.Product;
+import com.orderpicker.product.domain.repository.ProductRepository;
+import com.orderpicker.product.infrastructure.dto.ProductDetails;
+import com.orderpicker.product.infrastructure.dto.ProductDetailsDTO;
 import com.orderpicker.product.infrastructure.service.ProductService;
 import com.orderpicker.rol.Role;
 import com.orderpicker.user.domain.model.User;
@@ -42,17 +48,26 @@ public class OrderServiceImp implements OrderService {
 
     private final @NonNull MapperOrder mapperOrder;
 
+    private final OrderDetailService orderDetailServiceImp;
+
+    private final ProductRepository productRepository;
+
     @Override
     public Order createOrder(Long id, OrderDTO orderDTO) {
+        List<OrderDetail> listOrderDetail = new ArrayList<>();
         User clientFound = this.userService.getById(id);
 
         this.negativeAmountProduct(orderDTO.getProducts());
 
         List<Product> productsFound = this.searchProducts(orderDTO.getProducts());
 
-        this.registerChangeProduct(orderDTO, productsFound);
+        this.registerChangeProduct(orderDTO, productsFound, listOrderDetail);
 
-        return this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, clientFound, productsFound));
+        Order orderSaved = this.orderRepository.save(this.mapperOrder.createOrder(orderDTO, clientFound));
+
+        this.addDetail(listOrderDetail, orderSaved);
+
+        return orderSaved;
     }
 
     @Override
@@ -110,11 +125,11 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public OrderInformation getOneByIdAndUser(Long idUser, Long id) {
+    public Orders getOneByIdAndUser(Long idUser, Long id) {
         this.userService.getById(idUser);
         this.getOneById(id);
 
-        OrderInformation orderUserFound = this.orderRepository.getOneByIdAndUser(idUser, id);
+        Orders orderUserFound = this.orderRepository.getOneByIdAndUser(idUser, id);
         if(orderUserFound == null){
             throw new NotFoundException(String.format("Order with id %s doesn't belong to user with id %s", id, idUser));
         }
@@ -159,13 +174,40 @@ public class OrderServiceImp implements OrderService {
         }
     }
 
+    @Override
+    public OrderDetailDTO getOneDetailsById(Long idUser, Long idOrder){
+        Orders orderFound = this.getOneByIdAndUser(idUser, idOrder);
+
+        ProductDetailsDTO productDetailsDTO;
+        List<ProductDetailsDTO> productsOrdered = new ArrayList<>();
+        List<ProductDetails> productsFound = this.productService.findDetailsProductsByIdOrder(idOrder);
+        for(ProductDetails productDetail : productsFound){
+            int amount = this.orderDetailServiceImp.findAmountByProductIdAndOrderId(productDetail.getId(), idOrder);
+            productDetailsDTO = ProductDetailsDTO.builder()
+                    .unitPrice(productDetail.getUnitPrice())
+                    .name(productDetail.getName())
+                    .amount(amount)
+                    .build();
+            productsOrdered.add(productDetailsDTO);
+        }
+
+        return OrderDetailDTO.builder()
+                .idOrder(orderFound.getId())
+                .totalPrice(orderFound.getTotalPrice())
+                .userName(orderFound.getUser())
+                .createAt(orderFound.getCreatedAt())
+                .products(productsOrdered)
+                .isDelivered(orderFound.getIsDelivered())
+                .build();
+    }
+
     protected List<Product> searchProducts(List<Product> products){
         List<Product> productsFound = new ArrayList<>();
         for(Product product:products) productsFound.add(this.productService.getByName(product.getName()));
         return productsFound;
     }
 
-    protected void registerChangeProduct(OrderDTO orderDTO, List<Product> productsFound){
+    protected void registerChangeProduct(OrderDTO orderDTO, List<Product> productsFound, List<OrderDetail> listOrderDetail){
         List<String> productsDescription = new ArrayList<>();
         List<String> uniqueProduct = new ArrayList<>();
         this.productService.verifyAmountInOneOrder(productsFound, orderDTO.getProducts());
@@ -176,6 +218,12 @@ public class OrderServiceImp implements OrderService {
                     orderDTO.setTotalPrice(orderDTO.getTotalPrice() + this.productService.getTotalPriceProduct(productFound, product.getAmount()));
                     productsDescription.add(String.format("Product: %s, amount: %s, unit price: %s, total price product: %s", product.getName(), product.getAmount(), productFound.getPrice(), this.productService.getTotalPriceProduct(productFound, product.getAmount())));
                     uniqueProduct.add(product.getName());
+                    Product productOrdered = Product.builder()
+                            .id(productFound.getId())
+                            .amount(product.getAmount())
+                            .build();
+                    OrderDetail orderDetail = OrderDetail.builder().product(productOrdered).build();
+                    listOrderDetail.add(orderDetail);
                 }
             });
             orderDTO.setOrderDescription(productsDescription);
@@ -187,6 +235,14 @@ public class OrderServiceImp implements OrderService {
             if(product.getAmount() < 1){
                 throw new BadRequestException(String.format("%s product to must be greater than 0", product.getName()));
             }
+        }
+    }
+
+    private void addDetail(List<OrderDetail> listOrderDetail, Order order) {
+        for(OrderDetail orderDetail : listOrderDetail){
+            orderDetail.setAmount(orderDetail.getProduct().getAmount());
+            orderDetail.setOrder(order);
+            this.orderDetailServiceImp.createOne(orderDetail);
         }
     }
 }

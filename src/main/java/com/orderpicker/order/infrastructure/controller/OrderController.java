@@ -9,6 +9,7 @@ import com.orderpicker.order.infrastructure.response.OrderDTOResponse;
 import com.orderpicker.order.infrastructure.response.OrderUserResponse;
 import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.order.infrastructure.service.OrderService;
+import com.orderpicker.orderdetail.infrastructure.dto.OrderDetailDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -221,15 +222,15 @@ public class OrderController {
                     content = @Content
             )
     })
-    @GetMapping(ENDPOINT_ORDER_USER_ID)
-    ResponseEntity<OrderInformation> getOneByIdAndUser(
+    @GetMapping("/order-details/{idUser}/{idOrder}")
+    ResponseEntity<OrderDetailDTO> getOrderDetailsById(
             @Parameter(description = "User ID to search your order")
-            @PathVariable("idUser") Long idUser,
-            @Parameter(description = "Product ID to search")
-            @PathVariable("id") Long id
+            @PathVariable Long idUser,
+            @Parameter(description = "Order ID to search")
+            @PathVariable Long idOrder
     ){
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         this.orderService.validateUserRequestById(idUser, userEmail);
-        return new ResponseEntity<>(this.orderService.getOneByIdAndUser(idUser, id), HttpStatus.OK);
+        return new ResponseEntity<>(this.orderService.getOneDetailsById(idUser, idOrder), HttpStatus.OK);
     }
 }
