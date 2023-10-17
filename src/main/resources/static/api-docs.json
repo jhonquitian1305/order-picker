@@ -1240,13 +1240,13 @@
         }
       }
     },
-    "/api/order-picker/orders/user/{idUser}/{id}": {
+    "/api/order-picker/orders/order-details/{idUser}/{idOrder}": {
       "get": {
         "tags": [
           "order-controller"
         ],
         "summary": "Get an Order by user and id",
-        "operationId": "getOneByIdAndUser",
+        "operationId": "getOrderDetailsById",
         "parameters": [
           {
             "name": "idUser",
@@ -1259,9 +1259,9 @@
             }
           },
           {
-            "name": "id",
+            "name": "idOrder",
             "in": "path",
-            "description": "Product ID to search",
+            "description": "Order ID to search",
             "required": true,
             "schema": {
               "type": "integer",

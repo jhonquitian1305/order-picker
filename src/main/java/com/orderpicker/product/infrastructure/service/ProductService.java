@@ -2,6 +2,7 @@ package com.orderpicker.product.infrastructure.service;
 
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
+import com.orderpicker.product.infrastructure.dto.ProductDetails;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface ProductService {
     Double getTotalPriceProduct(Product product, int amount);
     void deleteOneById(Long id);
     void verifyAmountInOneOrder(List<Product> products, List<Product> productsDTO);
+    List<ProductDetails> findDetailsProductsByIdOrder(Long idOrder);
 }
