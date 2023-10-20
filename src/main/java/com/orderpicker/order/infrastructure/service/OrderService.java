@@ -9,12 +9,13 @@ import com.orderpicker.order.infrastructure.response.OrdersResponse;
 import com.orderpicker.orderdetail.infrastructure.dto.OrderDetailDTO;
 
 public interface OrderService {
+    Order getById(Long id);
     Order createOrder(Long id, OrderDTO orderDTO);
     OrderUserResponse getAllByClient(Long idUser, int numberPage, int pageSize, String sortBy, String sortDir);
     OrdersResponse getAll(String delivered, int numberPage, int pageSize, String sortBy, String sortDir);
     Orders getOneById(Long id);
     Orders getOneByIdAndUser(Long idUser, Long id);
-    Order markAsDelivered(Order order);
+    void markAsDelivered(Order order);
     Order getOneByIdInDelivery(Long id);
     void setDelivery(Order order, Delivery delivery);
     void validateUserRequestById(Long idUser, String userEmail);

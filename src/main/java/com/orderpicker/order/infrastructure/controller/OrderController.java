@@ -2,6 +2,7 @@ package com.orderpicker.order.infrastructure.controller;
 
 import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.order.application.mapper.MapperOrder;
+import com.orderpicker.order.domain.model.Order;
 import com.orderpicker.order.infrastructure.dto.OrderDTO;
 import com.orderpicker.order.infrastructure.dto.OrderInformation;
 import com.orderpicker.order.infrastructure.dto.Orders;
@@ -232,5 +233,43 @@ public class OrderController {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         this.orderService.validateUserRequestById(idUser, userEmail);
         return new ResponseEntity<>(this.orderService.getOneDetailsById(idUser, idOrder), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Mark an Order as delivered")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Order Marked as delivered",
+                    headers = {
+                            @Header(name = "Authorization", description = "Token authorization")
+                    },
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "No permission to apply",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Order Not Found",
+                    content = @Content
+            )
+    })
+    @PatchMapping("/{id}")
+    ResponseEntity<String> orderDelivered(
+            @Parameter(description = "Order ID to mark as delivered")
+            @PathVariable Long id
+    ){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.orderService.validateRole(userEmail);
+        Order orderFound = this.orderService.getById(id);
+        this.orderService.markAsDelivered(orderFound);
+        return new ResponseEntity<>("Order delivered", HttpStatus.OK);
     }
 }

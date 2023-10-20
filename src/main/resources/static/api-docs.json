@@ -1238,6 +1238,49 @@
             "description": "Order Not Found"
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "order-controller"
+        ],
+        "summary": "Mark an Order as delivered",
+        "operationId": "orderDelivered",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order ID to mark as delivered",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order Marked as delivered",
+            "headers": {
+              "Authorization": {
+                "description": "Token authorization",
+                "style": "simple"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to apply"
+          },
+          "404": {
+            "description": "Order Not Found"
+          }
+        }
       }
     },
     "/api/order-picker/orders/order-details/{idUser}/{idOrder}": {

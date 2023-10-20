@@ -16,7 +16,6 @@ import com.orderpicker.orderdetail.domain.model.OrderDetail;
 import com.orderpicker.orderdetail.infrastructure.dto.OrderDetailDTO;
 import com.orderpicker.orderdetail.infrastructure.service.OrderDetailService;
 import com.orderpicker.product.domain.model.Product;
-import com.orderpicker.product.domain.repository.ProductRepository;
 import com.orderpicker.product.infrastructure.dto.ProductDetails;
 import com.orderpicker.product.infrastructure.dto.ProductDetailsDTO;
 import com.orderpicker.product.infrastructure.service.ProductService;
@@ -50,7 +49,10 @@ public class OrderServiceImp implements OrderService {
 
     private final OrderDetailService orderDetailServiceImp;
 
-    private final ProductRepository productRepository;
+    @Override
+    public Order getById(Long id){
+        return this.orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order with id %s not found".formatted(id)));
+    }
 
     @Override
     public Order createOrder(Long id, OrderDTO orderDTO) {
@@ -138,12 +140,12 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public Order markAsDelivered(Order order) {
+    public void markAsDelivered(Order order) {
         if(order.isDelivered()){
             throw new BadRequestException(String.format("Order with id %s already delivered", order.getId()));
         }
         order.setDelivered(true);
-        return this.orderRepository.save(order);
+        this.orderRepository.save(order);
     }
 
     @Override
