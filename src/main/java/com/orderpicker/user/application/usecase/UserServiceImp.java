@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,8 +114,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void validateUserRequestById(Long id, String userEmail) {
+        ArrayList<Role> rolesAllow = new ArrayList<>();
+        rolesAllow.add(Role.ADMIN);
+        rolesAllow.add(Role.EMPLOYEE);
         User userFound = this.getByEmail(userEmail);
-        if(userFound.getRole() != Role.ADMIN && !id.equals(userFound.getId())){
+        if(!rolesAllow.contains(userFound.getRole()) && !id.equals(userFound.getId())){
                 throw new NotFoundException("User with id %s not found".formatted(id));
         }
     }
