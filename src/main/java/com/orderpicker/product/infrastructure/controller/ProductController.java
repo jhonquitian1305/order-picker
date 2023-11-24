@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -133,7 +134,8 @@ public class ProductController {
             @Parameter(description = "Sort the answer by a direction")
             @RequestParam(value = "sortDir", defaultValue = PRODUCT_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
-        return new ResponseEntity<>(this.productService.getAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return new ResponseEntity<>(this.productService.getAll(userEmail, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
     @Operation(summary = "Get a Product by name")

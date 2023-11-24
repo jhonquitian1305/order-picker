@@ -9,6 +9,9 @@ import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.dto.ProductDetails;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
+import com.orderpicker.rol.Role;
+import com.orderpicker.user.domain.model.User;
+import com.orderpicker.user.infrastructure.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ public class ProductServiceImp implements ProductService {
 
     private final @NonNull MapperProduct mapperProduct;
 
+    private final UserService userService;
+
     @Override
     public Product saveOne(ProductDTO productDTO) {
         this.verifyAmountEntered(productDTO.getAmount());
@@ -48,11 +53,17 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse getAll(int numberPage, int pageSize, String sortBy, String sortDir) {
+    public ProductResponse getAll(String userEmail, int numberPage, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
+        Page<Product> productsFound;
 
-        Page<Product> productsFound = this.productRepository.findAllByAmountGreaterThan(pageable, 0);
+        User userFound = this.userService.getByEmail(userEmail);
+        if(userFound.getRole().equals(Role.USER)){
+            productsFound = this.productRepository.findAllByAmountGreaterThan(pageable, 0);
+        }else{
+            productsFound = this.productRepository.findAll(pageable);
+        }
 
         List<ProductDTO> products = productsFound.getContent().stream().map(this.mapperProduct::mapProductDTO).toList();
 
