@@ -2,6 +2,8 @@ package com.orderpicker.product.domain.repository;
 
 import com.orderpicker.product.domain.model.Product;
 import com.orderpicker.product.infrastructure.dto.ProductDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     where o.id = :idOrder
     """)
     List<ProductDetails> findDetailsProductsByIdOrder(Long idOrder);
+
+    Page<Product> findAllByAmountGreaterThan(Pageable pageable, Integer amount);
 }

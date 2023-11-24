@@ -52,7 +52,7 @@ public class ProductServiceImp implements ProductService {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(numberPage, pageSize, sort);
 
-        Page<Product> productsFound = this.productRepository.findAll(pageable);
+        Page<Product> productsFound = this.productRepository.findAllByAmountGreaterThan(pageable, 0);
 
         List<ProductDTO> products = productsFound.getContent().stream().map(this.mapperProduct::mapProductDTO).toList();
 
