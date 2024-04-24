@@ -186,9 +186,10 @@ public class OrderServiceImp implements OrderService {
         for(ProductDetails productDetail : productsFound){
             int amount = this.orderDetailServiceImp.findAmountByProductIdAndOrderId(productDetail.getId(), idOrder);
             productDetailsDTO = ProductDetailsDTO.builder()
-                    .unitPrice(productDetail.getUnitPrice())
+                    .price(productDetail.getUnitPrice())
                     .name(productDetail.getName())
                     .amount(amount)
+                    .imageUrl(productDetail.getImageUrl())
                     .build();
             productsOrdered.add(productDetailsDTO);
         }

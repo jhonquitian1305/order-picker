@@ -4,4 +4,5 @@ public interface ProductDetails {
     Long getId();
     String getName();
     Double getUnitPrice();
+    String getImageUrl();
 }

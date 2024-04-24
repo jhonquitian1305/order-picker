@@ -1,10 +1,14 @@
 package com.orderpicker.product.infrastructure.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
+import com.cloudinary.utils.ObjectUtils;
 import com.orderpicker.exception.BadRequestException;
 import com.orderpicker.product.application.mapper.MapperProduct;
 import com.orderpicker.product.infrastructure.dto.ProductDTO;
 import com.orderpicker.product.infrastructure.response.ProductResponse;
 import com.orderpicker.product.infrastructure.service.ProductService;
+import com.orderpicker.user.domain.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -16,12 +20,16 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.orderpicker.product.infrastructure.constants.ProductEndpointsConstants.*;
@@ -31,6 +39,15 @@ import static com.orderpicker.product.infrastructure.constants.ProductPagination
 @RequestMapping(ENDPOINT_PRODUCTS)
 @RequiredArgsConstructor(onConstructor =  @__(@Autowired))
 public class ProductController {
+
+    @Value("${cloudinary.cloud-name}")
+    private String cloudName;
+
+    @Value("${cloudinary.api-key}")
+    private String apiKey;
+
+    @Value("${cloudinary.api-secret}")
+    private String apiSecret;
 
     private final @NonNull ProductService productService;
 
@@ -135,6 +152,7 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = PRODUCT_DEFAULT_SORT_DIR, required = false) String sortDir
     ){
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(this.productService.getAll(userEmail, pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
@@ -314,4 +332,21 @@ public class ProductController {
         this.productService.deleteOneById(id);
         return new ResponseEntity<>("Product deleted", HttpStatus.OK);
     }
+
+    @PostMapping("/upload")
+    public Map<String, Object> uploadImage(@RequestParam(required = false) String name, @RequestParam("file") MultipartFile file) throws IOException {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret
+        ));
+
+        Transformation transformation = new Transformation().width(300).height(300).crop("fit");
+
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap("folder", "order-picker/products", "public_id", name, "transformation", transformation));
+
+        return uploadResult;
+    }
+
 }

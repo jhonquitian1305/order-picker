@@ -34,7 +34,7 @@ public class UserDTO {
 
     @NotNull(message = "Address field couldn't be null")
     @NotEmpty(message = "Address field couldn't be empty")
-    @Size(min = 5, max = 100)
+    @Size(min = 5, max = 100, message = "Address field be between 5 and 100")
     private String address;
 
     @NotNull(message = "Phone field couldn't be null")

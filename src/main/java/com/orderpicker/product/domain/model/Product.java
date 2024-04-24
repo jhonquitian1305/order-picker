@@ -22,7 +22,7 @@ public class Product {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Size(min = 5, max=100)
+    @Size(min = 3, max=100)
     private String name;
 
     @Column(nullable = false)

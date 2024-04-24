@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByName(String name);
 
     @Query("""
-    select p.id as id, p.name as name, p.price as unitPrice from products p
+    select p.id as id, p.name as name, p.price as unitPrice, p.imageUrl as imageUrl from products p
     inner join OrderDetail od ON od.product.id = p.id
     inner join orders o on od.order.id = o.id
     where o.id = :idOrder
