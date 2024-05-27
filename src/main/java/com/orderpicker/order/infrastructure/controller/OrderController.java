@@ -28,6 +28,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.orderpicker.order.infrastructure.constants.OrderEndpointsConstants.*;
@@ -262,7 +264,7 @@ public class OrderController {
             )
     })
     @PatchMapping("/{id}")
-    ResponseEntity<String> orderDelivered(
+    ResponseEntity<Map<String, String>> orderDelivered(
             @Parameter(description = "Order ID to mark as delivered")
             @PathVariable Long id
     ){
@@ -270,6 +272,8 @@ public class OrderController {
         this.orderService.validateRole(userEmail);
         Order orderFound = this.orderService.getById(id);
         this.orderService.markAsDelivered(orderFound);
-        return new ResponseEntity<>("Order delivered", HttpStatus.OK);
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Order Delivered");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
