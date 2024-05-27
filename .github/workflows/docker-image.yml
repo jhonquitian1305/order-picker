@@ -23,7 +23,7 @@ jobs:
       with: 
         major_pattern: "major:"
         minor_pattern: "feat:"
-        format: "${major}.${minor}.${increment}"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
       id: version
     
     - name: Docker Login
@@ -33,7 +33,7 @@ jobs:
         NEW_VERSION: ${{ steps.version.outputs.version }}
       run: |
         echo "Init login"
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        docker login -u $DOCKER_USER --password-stdin
         echo "End Login"
         echo "New version: $NEW_VERSION!!!"
             
