@@ -23,7 +23,7 @@ jobs:
       with: 
         major_pattern: "major:"
         minor_pattern: "feat:"
-        version_format: "${major}.${minor}.${patch}+1"
+        version_format: "${major}.${minor}.${patch}"
       id: version
     
     - name: Docker Login
