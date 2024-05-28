@@ -1,3 +1,3 @@
 # order-picker
 
-## This app allow to create orders
+## This app allow to create orders, users
