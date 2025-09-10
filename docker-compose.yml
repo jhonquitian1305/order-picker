@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  java_app:
+    depends_on:
+      - db
+    container_name: order-picker-app
+    image: order-picker:1.0.0
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_USERNAME: ${MYSQL_USER}
+      DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      ALLOW_ORIGINS: ${ALLOW_ORIGINS}
+
+  db:
+    container_name: ${MYSQL_DATABASE}
+    image: mysql:8.1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_DEFAULT_PORT}"
+    volumes:
+      - order-picker:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0-apache
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_ARBITRARY: 1
+
+volumes:
+  order-picker:
+    external: false
